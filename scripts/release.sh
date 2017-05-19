@@ -20,7 +20,7 @@ fi
 
 git commit -a -m "RELEASE: release $projectName-$RELEASE_VERSION"
 if [ $dryRun = "false" ]; then
-    git tag -a $projectName-$RELEASE_VERSION
+    git tag -am "$projectName-$RELEASE_VERSION" $projectName-$RELEASE_VERSION
     git push origin master
 else
     echo dryRun mode - Skipping tagging version and pushing changes to remote
