@@ -18,6 +18,7 @@ public class IdGeneratorImpl implements IdGenerator {
         return toOrderedString(uuid);
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     private String toOrderedString(UUID uuid) {
         String s = uuid.toString();
         // After https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/
