@@ -1,3 +1,5 @@
 <FindBugsFilter>
-    <!-- See sparkbit-security for example of usage -->
+    <Match>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
 </FindBugsFilter>

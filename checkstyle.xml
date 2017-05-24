@@ -97,7 +97,7 @@
             <property name="illegalPattern" value="true"/>
             <property name="message" value="Trailing whitespace"/>
         </module>
-        <module name="ReturnCount"/>
+        <!--<module name="ReturnCount"/>-->
         <module name="RightCurly"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
