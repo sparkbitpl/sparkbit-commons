@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 
+@SuppressWarnings("unused")
 public class InstantAsIntegerTypeHandler extends BaseTypeHandler<Instant> {
 
     @Override
