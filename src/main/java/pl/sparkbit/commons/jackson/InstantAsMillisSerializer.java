@@ -10,11 +10,11 @@ import java.time.Instant;
 public class InstantAsMillisSerializer extends JsonSerializer<Instant> {
 
     @Override
-    public void serialize(Instant value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-        if (null == value) {
+    public void serialize(Instant instant, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+        if (null == instant) {
             jgen.writeNull();
         } else {
-            long millis = value.toEpochMilli();
+            long millis = instant.toEpochMilli();
             jgen.writeNumber(millis);
         }
     }

@@ -42,7 +42,9 @@
         <!--<module name="ImportControl">
             <property name="file" value="config/import-control.xml"/>
         </module>-->
-        <module name="Indentation"/>
+        <module name="Indentation">
+            <property name="arrayInitIndent" value="8"/>
+        </module>
         <module name="ImportOrder">
             <property name="groups" value="*,javax,java"/>
             <property name="ordered" value="true"/>
