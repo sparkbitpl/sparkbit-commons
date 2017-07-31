@@ -1,4 +1,4 @@
-package pl.sparkbit.commons.mybatis;
+package pl.sparkbit.commons.mybatis.handlers;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;

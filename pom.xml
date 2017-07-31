@@ -185,6 +185,11 @@
             <version>2.5</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.timgroup</groupId>
+            <artifactId>java-statsd-client</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>
