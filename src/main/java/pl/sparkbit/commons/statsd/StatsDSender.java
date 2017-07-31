@@ -14,32 +14,32 @@ public class StatsDSender {
 
     private final StatsDClient client;
 
-    void addToCounter(String counter, long value) {
+    public void addToCounter(String counter, long value) {
         log.trace("Set counter {} to {}", counter, value);
         client.count(counter, value);
     }
 
-    void incrementCounter(String counter) {
+    public void incrementCounter(String counter) {
         log.trace("Incrementing counter {}", counter);
         client.incrementCounter(counter);
     }
 
-    void setGauge(String gauge, long value) {
+    public void setGauge(String gauge, long value) {
         log.trace("Set gauge {} to {}", gauge, value);
         client.recordGaugeValue(gauge, value);
     }
 
-    void incrementGauge(String gauge) {
+    public void incrementGauge(String gauge) {
         log.trace("Increment gauge {}", gauge);
         client.recordGaugeDelta(gauge, 1L);
     }
 
-    void decrementGauge(String gauge) {
+    public void decrementGauge(String gauge) {
         log.trace("Decrement gauge {}", gauge);
         client.recordGaugeDelta(gauge, -1L);
     }
 
-    void recordEventDuration(String event, Duration duration) {
+    public void recordEventDuration(String event, Duration duration) {
         log.trace("Recording duration {}: {}", event, duration);
         client.recordExecutionTime(event, duration.toMillis());
     }
