@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Configuration;
 public class StatsDConfiguration {
 
     @Bean
-    public StatsDClient statsDClient(@Value("${metrics.statsd.host:}") String host,
+    public StatsDClient statsDClient(@Value("${metrics.statsd.host:\"\"}") String host,
             @Value("${metrics.statsd.port:8125}") int port,
             @Value("${metrics.statsd.prefix:\"\"}") String prefix) {
-        if (host == null || host.isEmpty()) {
+        if (host.isEmpty()) {
             log.warn("NoOpStatsDClient will be used as statsd is disabled by configuration");
             return new NoOpStatsDClient();
         } else {
