@@ -13,6 +13,7 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -23,6 +24,7 @@ import java.util.Properties;
  * To use this class it must be registered with MyBatis and implementation of MyBatisMetricsCollector
  * must be present in the Spring context.
  */
+@ConditionalOnProperty(value = "sparkbit.commons.mybatisMetrics.enabled", havingValue = "true")
 @Component
 @RequiredArgsConstructor
 @Slf4j

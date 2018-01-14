@@ -3,12 +3,15 @@ package pl.sparkbit.commons.statsd;
 import com.timgroup.statsd.StatsDClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
 @Component
+@ConditionalOnProperty(value = "sparkbit.commons.statsd.enabled", havingValue = "true")
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 @Slf4j
 public class StatsDSender {
 
