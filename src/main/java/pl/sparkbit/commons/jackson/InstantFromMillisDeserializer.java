@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import java.io.IOException;
 import java.time.Instant;
 
+@SuppressWarnings("unused")
 public class InstantFromMillisDeserializer extends StdScalarDeserializer<Instant> {
 
     public InstantFromMillisDeserializer() {

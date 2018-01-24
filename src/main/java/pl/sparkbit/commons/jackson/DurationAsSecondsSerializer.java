@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.time.Duration;
 
+@SuppressWarnings("unused")
 public class DurationAsSecondsSerializer extends JsonSerializer<Duration> {
 
     @Override

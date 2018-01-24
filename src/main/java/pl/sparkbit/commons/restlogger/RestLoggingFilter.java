@@ -1,7 +1,6 @@
 package pl.sparkbit.commons.restlogger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
@@ -16,9 +15,8 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Slf4j
 public class RestLoggingFilter extends OncePerRequestFilter {
-
-    private static final Logger LOG = LoggerFactory.getLogger("restlogger");
 
     private final AtomicLong id = new AtomicLong(0);
 
@@ -26,26 +24,26 @@ public class RestLoggingFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         long requestId = id.incrementAndGet();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("{} Incoming request headers \n{}", inPrompt(requestId), getHeaders(requestId, request));
+        if (log.isTraceEnabled()) {
+            log.trace("{} Incoming request headers \n{}", inPrompt(requestId), getHeaders(requestId, request));
             try {
                 if (request.getContentType() != null &&
                         MediaType.valueOf(request.getContentType()).isCompatibleWith(MediaType.APPLICATION_JSON)) {
                     request = new RequestWrapper(request, inPrompt(requestId));
-                    LOG.trace(((RequestWrapper) request).asString());
+                    log.trace(((RequestWrapper) request).asString());
                 }
             } catch (InvalidMediaTypeException e) {
-                LOG.trace("Request has invalid Content-Type!");
+                log.trace("Request has invalid Content-Type!");
             }
 
             response = new ResponseWrapper(response);
             chain.doFilter(request, response);
 
-            LOG.trace("{} Outgoing response headers (possibly not all included): \n{}", outPrompt(requestId),
+            log.trace("{} Outgoing response headers (possibly not all included): \n{}", outPrompt(requestId),
                     getHeaders(requestId, response, request.getProtocol()));
             if (response.getContentType() != null &&
                     MediaType.valueOf(response.getContentType()).isCompatibleWith(MediaType.APPLICATION_JSON)) {
-                LOG.trace(((ResponseWrapper) response).asString(outPrompt(requestId)));
+                log.trace(((ResponseWrapper) response).asString(outPrompt(requestId)));
             }
         } else {
             chain.doFilter(request, response);

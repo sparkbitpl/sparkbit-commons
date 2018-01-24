@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.time.Instant;
 
+@SuppressWarnings("unused")
 public class InstantAsMillisSerializer extends JsonSerializer<Instant> {
 
     @Override

@@ -8,8 +8,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 
+import static pl.sparkbit.commons.Properties.STATSD_ENABLED;
+
 @Component
-@ConditionalOnProperty(value = "sparkbit.commons.statsd.enabled", havingValue = "true")
+@ConditionalOnProperty(value = STATSD_ENABLED, havingValue = "true")
 @RequiredArgsConstructor
 @SuppressWarnings("unused")
 @Slf4j

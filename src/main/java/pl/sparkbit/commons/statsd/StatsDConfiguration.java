@@ -9,15 +9,18 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@ConditionalOnProperty(value = "sparkbit.commons.statsd.enabled", havingValue = "true")
+import static pl.sparkbit.commons.Properties.*;
+
+@ConditionalOnProperty(value = STATSD_ENABLED, havingValue = "true")
 @Configuration
 @Slf4j
+@SuppressWarnings("SpringFacetCodeInspection")
 public class StatsDConfiguration {
 
     @Bean
-    public StatsDClient statsDClient(@Value("${sparkbit.commons.statsd.host:}") String host,
-            @Value("${sparkbit.commons.statsd.port:8125}") int port,
-            @Value("${sparkbit.commons.statsd.prefix:}") String prefix) {
+    public StatsDClient statsDClient(@Value("${" + STATSD_HOST + "}") String host,
+                                     @Value("${" + STATSD_PORT + ":8125}") int port,
+                                     @Value("${" + STATSD_PREFIX + "}") String prefix) {
         if (host.isEmpty()) {
             log.warn("NoOpStatsDClient will be used as statsd is disabled by configuration");
             return new NoOpStatsDClient();
