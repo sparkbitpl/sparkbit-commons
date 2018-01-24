@@ -1,7 +1,6 @@
 package pl.sparkbit.commons.mybatis.metrics;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -40,7 +39,6 @@ import static pl.sparkbit.commons.Properties.MYBATIS_METRICS_ENABLED;
                         CacheKey.class, BoundSql.class})
 })
 @RequiredArgsConstructor
-@Slf4j
 @SuppressWarnings({"unused", "checkstyle:indentation"})
 public class PerformancePlugin implements Interceptor {
 

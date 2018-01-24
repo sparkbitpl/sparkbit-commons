@@ -3,6 +3,7 @@ package pl.sparkbit.commons;
 @SuppressWarnings("checkstyle:hideutilityclassconstructor")
 public class Properties {
 
+    public static final String BUILD_INFO_ENABLED = "sparkbit.commons.buildInfo.enabled";
     public static final String CLOCK_ENABLED = "sparkbit.commons.clock.enabled";
     public static final String ID_GENERATOR_ENABLED = "sparkbit.commons.idGenerator.enabled";
     public static final String MYBATIS_METRICS_ENABLED = "sparkbit.commons.mybatisMetrics.enabled";
