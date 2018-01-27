@@ -12,6 +12,7 @@ import static pl.sparkbit.commons.Properties.REQUEST_LOGGING_ENABLED;
 
 @ConditionalOnProperty(value = REQUEST_LOGGING_ENABLED, havingValue = "true", matchIfMissing = true)
 @Configuration
+@SuppressWarnings("SpringFacetCodeInspection")
 public class RequestLoggingConfiguration {
 
     private static final Integer RIGHT_AFTER_HIGHEST_PRECEDENCE = HIGHEST_PRECEDENCE + 1;
