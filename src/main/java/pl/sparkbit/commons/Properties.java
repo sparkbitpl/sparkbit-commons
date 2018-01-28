@@ -15,6 +15,10 @@ public class Properties {
     public static final String CONTENT_COMPRESSION_ENABLED = PREFIX + "contentCompression.enabled";
     public static final String CONTENT_COMPRESSION_THRESHOLD = PREFIX + "contentCompression.threshold";
     public static final String ID_GENERATOR_ENABLED = PREFIX + "idGenerator.enabled";
+    public static final String MAIL_DEFAULT_SENDER_ADDRESS = PREFIX + "mail.defaultSender.address";
+    public static final String MAIL_DEFAULT_SENDER_NAME = PREFIX + "mail.defaultSender.name";
+    public static final String MAIL_SENDGRID_API_KEY = PREFIX + "mail.sendgrid.apiKey";
+    public static final String MAIL_SENDGRID_ENABLED = PREFIX + "mail.sendgrid.enabled";
     public static final String MYBATIS_METRICS_ENABLED = PREFIX + "mybatisMetrics.enabled";
     public static final String REQUEST_LOGGING_ENABLED = PREFIX + "requestLogging.enabled";
     public static final String STATSD_ENABLED = PREFIX + "statsd.enabled";
