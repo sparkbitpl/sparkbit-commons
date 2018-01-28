@@ -1,7 +1,6 @@
 package pl.sparkbit.commons.mail;
 
 import com.sendgrid.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -15,7 +14,6 @@ import static java.util.Collections.emptyMap;
 import static pl.sparkbit.commons.Properties.*;
 
 @ConditionalOnProperty(value = MAIL_SENDGRID_ENABLED, havingValue = "true")
-@RequiredArgsConstructor
 @SuppressWarnings("unused")
 @Service
 @Slf4j
