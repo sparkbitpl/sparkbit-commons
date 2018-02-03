@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Slf4j
+@Slf4j(topic = "restlogger")
 public class RestLoggingFilter extends OncePerRequestFilter {
 
     private final AtomicLong id = new AtomicLong(0);
