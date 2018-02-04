@@ -9,6 +9,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class Properties {
 
     private static final String PREFIX = "sparkbit.commons.";
+    private static final String TEST_DB_PREFIX = "test.db.";
 
     public static final String BUILD_INFO_ENABLED = PREFIX + "buildInfo.enabled";
     public static final String CLOCK_ENABLED = PREFIX + "clock.enabled";
@@ -25,4 +26,11 @@ public class Properties {
     public static final String STATSD_HOST = PREFIX + "statsd.host";
     public static final String STATSD_PORT = PREFIX + "statsd.port";
     public static final String STATSD_PREFIX = PREFIX + "statsd.prefix";
+    public static final String TEST_DB_DRIVER_CLASS_NAME = TEST_DB_PREFIX + "driverClassName";
+    public static final String TEST_DB_HANDLER_PACKAGES = TEST_DB_PREFIX + "handlerPackages";
+    public static final String TEST_DB_PASSWORD = TEST_DB_PREFIX + "password";
+    public static final String TEST_DB_SCHEMA_FILE = TEST_DB_PREFIX + "schemaFile";
+    public static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "typeAliasesPackage";
+    public static final String TEST_DB_URL = TEST_DB_PREFIX + "url";
+    public static final String TEST_DB_USERNAME = TEST_DB_PREFIX + "username";
 }

@@ -36,7 +36,6 @@ public class BusinessException extends RuntimeException {
         this.messageDetails = messageDetails;
     }
 
-    //todo change ugly empty array
     public String[] getMessageDetails() {
         return messageDetails != null ? Arrays.copyOf(messageDetails, messageDetails.length) : new String[] {};
     }
