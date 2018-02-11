@@ -16,8 +16,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
-import java.time.Duration;
-import java.time.Instant;
 
 import static pl.sparkbit.commons.Properties.*;
 
@@ -81,8 +79,7 @@ public class MapperTestConfigBase {
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMapperLocations(mappers);
         sessionFactory.setTypeAliasesPackage(typeAliasesPackage);
-        sessionFactory.setTypeAliases(new Class[]{Instant.class, Duration.class});
-        sessionFactory.setTypeHandlersPackage("pl.sparkbit.commons.mybatis," + handlerPackages);
+        sessionFactory.setTypeHandlersPackage("pl.sparkbit.commons.mybatis.handlers," + handlerPackages);
         return sessionFactory.getObject();
     }
 
