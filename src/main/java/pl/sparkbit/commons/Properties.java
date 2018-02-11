@@ -9,7 +9,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class Properties {
 
     private static final String PREFIX = "sparkbit.commons.";
-    private static final String TEST_DB_PREFIX = "test.db.";
+    private static final String TEST_DB_PREFIX = "mapperTest.db.";
 
     public static final String BUILD_INFO_ENABLED = PREFIX + "buildInfo.enabled";
     public static final String CLOCK_ENABLED = PREFIX + "clock.enabled";
