@@ -16,6 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.Driver;
+import java.util.Arrays;
 
 import static pl.sparkbit.commons.Properties.*;
 
@@ -37,8 +38,8 @@ public class MapperTestConfigBase {
     @Value("${" + TEST_DB_DRIVER_CLASS_NAME + ":com.mysql.jdbc.Driver}")
     private String driverClassName;
 
-    @Value("${" + TEST_DB_SCHEMA_FILE + ":sql/schema.sql}")
-    private String schemaFile;
+    @Value("${" + TEST_DB_SCHEMA_FILES + ":sql/schema.sql}")
+    private String[] schemaFiles;
 
     @Value("${" + TEST_DB_TYPE_ALIASES_PACKAGE + ":}")
     private String typeAliasesPackage;
@@ -69,7 +70,7 @@ public class MapperTestConfigBase {
 
     private DatabasePopulator databasePopulator() {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(new ClassPathResource(schemaFile));
+        Arrays.stream(schemaFiles).forEach(file -> populator.addScript(new ClassPathResource(file)));
         return populator;
     }
 

@@ -29,7 +29,7 @@ public class Properties {
     public static final String TEST_DB_DRIVER_CLASS_NAME = TEST_DB_PREFIX + "driverClassName";
     public static final String TEST_DB_HANDLER_PACKAGES = TEST_DB_PREFIX + "handlerPackages";
     public static final String TEST_DB_PASSWORD = TEST_DB_PREFIX + "password";
-    public static final String TEST_DB_SCHEMA_FILE = TEST_DB_PREFIX + "schemaFile";
+    public static final String TEST_DB_SCHEMA_FILES = TEST_DB_PREFIX + "schemaFiles";
     public static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "typeAliasesPackage";
     public static final String TEST_DB_URL = TEST_DB_PREFIX + "url";
     public static final String TEST_DB_USERNAME = TEST_DB_PREFIX + "username";
