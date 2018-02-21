@@ -33,4 +33,6 @@ public class Properties {
     public static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "typeAliasesPackage";
     public static final String TEST_DB_URL = TEST_DB_PREFIX + "url";
     public static final String TEST_DB_USERNAME = TEST_DB_PREFIX + "username";
+    public static final String REST_ERROR_ATTRIBUTES_ENABLED = PREFIX + "restErrorAttributes.enabled";
+
 }

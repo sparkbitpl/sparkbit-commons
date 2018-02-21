@@ -3,6 +3,7 @@ package pl.sparkbit.commons.exception;
 import com.google.common.collect.ImmutableSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static pl.sparkbit.commons.Properties.REST_ERROR_ATTRIBUTES_ENABLED;
+
 @Component
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = REST_ERROR_ATTRIBUTES_ENABLED, havingValue = "true", matchIfMissing = true)
 @Slf4j
 @SuppressWarnings("unused")
 public class RestErrorAttributes extends DefaultErrorAttributes {
