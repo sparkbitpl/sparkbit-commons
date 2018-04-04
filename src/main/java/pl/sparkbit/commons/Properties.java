@@ -22,6 +22,7 @@ public class Properties {
     public static final String MAIL_SENDGRID_ENABLED = PREFIX + "mail.sendgrid.enabled";
     public static final String MYBATIS_METRICS_ENABLED = PREFIX + "mybatisMetrics.enabled";
     public static final String REQUEST_LOGGING_ENABLED = PREFIX + "requestLogging.enabled";
+    public static final String REST_ERROR_ATTRIBUTES_ENABLED = PREFIX + "restErrorAttributes.enabled";
     public static final String STATSD_ENABLED = PREFIX + "statsd.enabled";
     public static final String STATSD_HOST = PREFIX + "statsd.host";
     public static final String STATSD_PORT = PREFIX + "statsd.port";
@@ -33,6 +34,4 @@ public class Properties {
     public static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "typeAliasesPackage";
     public static final String TEST_DB_URL = TEST_DB_PREFIX + "url";
     public static final String TEST_DB_USERNAME = TEST_DB_PREFIX + "username";
-    public static final String REST_ERROR_ATTRIBUTES_ENABLED = PREFIX + "restErrorAttributes.enabled";
-
 }

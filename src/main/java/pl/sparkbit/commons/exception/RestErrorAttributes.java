@@ -20,8 +20,8 @@ import java.util.Set;
 import static pl.sparkbit.commons.Properties.REST_ERROR_ATTRIBUTES_ENABLED;
 
 @Component
-@RequiredArgsConstructor
 @ConditionalOnProperty(value = REST_ERROR_ATTRIBUTES_ENABLED, havingValue = "true", matchIfMissing = true)
+@RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
 public class RestErrorAttributes extends DefaultErrorAttributes {
