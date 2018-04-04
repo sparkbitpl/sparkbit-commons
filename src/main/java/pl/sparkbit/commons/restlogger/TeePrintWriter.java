@@ -12,6 +12,7 @@ public class TeePrintWriter extends PrintWriter {
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public synchronized void write(char[] buf, int off, int len) {
         super.write(buf, off, len);
         branch.write(buf, off, len);

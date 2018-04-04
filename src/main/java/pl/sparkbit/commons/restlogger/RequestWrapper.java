@@ -34,6 +34,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         String line;
         while ((line = reader.readLine()) != null) {
             body.append(line).append('\n');
+            line = hidePassword(line);
             logBuilder.append(prompt).append(line).append('\n');
         }
         sis = new SimpleServletInputStream(new ByteArrayInputStream(body.toString().getBytes(charset)));
@@ -42,8 +43,12 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         logBuilder.append(prompt).append('\n');
     }
 
+    private String hidePassword(String line) {
+        return line.replaceAll("\"password\"(\\s*):(\\s*)\".*\"", "\"password\"$1:$2\"**********\"");
+    }
+
     @Override
-    public ServletInputStream getInputStream() throws IOException {
+    public ServletInputStream getInputStream() {
         if (usingReader) {
             throw new IllegalStateException("getReader() has already been called for this response");
         }
@@ -52,7 +57,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    public BufferedReader getReader() throws IOException {
+    public BufferedReader getReader() {
         if (usingInputStream) {
             throw new IllegalStateException("getInputStream() has already been called for this response");
         }
