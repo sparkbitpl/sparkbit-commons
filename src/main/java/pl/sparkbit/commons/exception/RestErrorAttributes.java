@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.WebRequest;
 import pl.sparkbit.commons.i18n.Messages;
 
 import java.time.Instant;
@@ -34,12 +34,12 @@ public class RestErrorAttributes extends DefaultErrorAttributes {
     private final Optional<Messages> messagesOpt;
 
     @Override
-    public Map<String, Object> getErrorAttributes(RequestAttributes requestAttributes, boolean includeStackTrace) {
-        Map<String, Object> errorAttributes = super.getErrorAttributes(requestAttributes, false);
+    public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
+        Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, false);
         Map<String, Object> result = new HashMap<>(errorAttributes);
         removeUnwantedAttributes(result);
         changeTimestampToMillis(result);
-        Throwable throwable = getError(requestAttributes);
+        Throwable throwable = getError(webRequest);
 
         if (throwable == null) {
             log.error("Runtime exception: {}", result.get("message"));
