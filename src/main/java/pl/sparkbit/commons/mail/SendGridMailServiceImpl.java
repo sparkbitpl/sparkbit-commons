@@ -1,17 +1,19 @@
 package pl.sparkbit.commons.mail;
 
 import com.sendgrid.*;
+import com.sendgrid.Mail;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import pl.sparkbit.commons.CommonsProperties;
 import pl.sparkbit.commons.exception.InternalException;
 
 import java.io.IOException;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
-import static pl.sparkbit.commons.Properties.*;
+import static pl.sparkbit.commons.CommonsProperties.*;
 
 @ConditionalOnProperty(value = MAIL_SENDGRID_ENABLED, havingValue = "true")
 @SuppressWarnings("unused")
@@ -24,23 +26,22 @@ public class SendGridMailServiceImpl implements MailService {
 
     private final SendGrid sendGrid;
 
-    @Value("${" + MAIL_DEFAULT_SENDER_ADDRESS + "}")
-    private String defaultSenderAddress;
-    @Value("${" + MAIL_DEFAULT_SENDER_NAME + "}")
-    private String defaultSenderName;
+    private CommonsProperties configuration;
 
-    public SendGridMailServiceImpl(@Value("${" + MAIL_SENDGRID_API_KEY + "}") String sendGridApiKey) {
+    public SendGridMailServiceImpl(@Value("#{commonsProperties.getMail().sendgridApiKey()}") String sendGridApiKey) {
         sendGrid = new SendGrid(sendGridApiKey);
     }
 
     @Override
     public void sendMail(String templateId, String to) {
-        sendMail(templateId, to, defaultSenderAddress, defaultSenderName, emptyMap());
+        sendMail(templateId, to, configuration.getMail().getDefaultSenderAddress(),
+                configuration.getMail().getDefaultSenderName(), emptyMap());
     }
 
     @Override
     public void sendMail(String templateId, String to, Map<String, String> params) {
-        sendMail(templateId, to, defaultSenderAddress, defaultSenderName, params);
+        sendMail(templateId, to, configuration.getMail().getDefaultSenderAddress(),
+                configuration.getMail().getDefaultSenderName(), params);
     }
 
     @Override

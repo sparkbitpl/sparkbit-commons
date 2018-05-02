@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import javax.servlet.Filter;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
-import static pl.sparkbit.commons.Properties.BUILD_INFO_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.BUILD_INFO_ENABLED;
 
-@ConditionalOnProperty(value = BUILD_INFO_ENABLED, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = BUILD_INFO_ENABLED, havingValue = "true")
 @Configuration
 @SuppressWarnings({"SpringFacetCodeInspection", "SpringJavaInjectionPointsAutowiringInspection"})
 public class BuildInfoFilterConfiguration {

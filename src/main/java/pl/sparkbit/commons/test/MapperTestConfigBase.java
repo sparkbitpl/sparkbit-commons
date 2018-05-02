@@ -18,10 +18,18 @@ import javax.sql.DataSource;
 import java.sql.Driver;
 import java.util.Arrays;
 
-import static pl.sparkbit.commons.Properties.*;
-
 @SuppressWarnings("unused")
 public class MapperTestConfigBase {
+
+    private static final String TEST_DB_PREFIX = "mapperTest.db.";
+
+    private static final String TEST_DB_DRIVER_CLASS_NAME = TEST_DB_PREFIX + "driverClassName";
+    private static final String TEST_DB_HANDLER_PACKAGES = TEST_DB_PREFIX + "handlerPackages";
+    private static final String TEST_DB_PASSWORD = TEST_DB_PREFIX + "password";
+    private static final String TEST_DB_SCHEMA_FILES = TEST_DB_PREFIX + "schemaFiles";
+    private static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "typeAliasesPackage";
+    private static final String TEST_DB_URL = TEST_DB_PREFIX + "url";
+    private static final String TEST_DB_USERNAME = TEST_DB_PREFIX + "username";
 
     @Value("classpath*:mybatis/*-mapper.xml")
     private Resource[] mappers;

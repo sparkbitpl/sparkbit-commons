@@ -10,10 +10,10 @@ import pl.sparkbit.commons.buildinfo.domain.BuildInfo;
 
 import java.util.Properties;
 
-import static pl.sparkbit.commons.Properties.BUILD_INFO_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.BUILD_INFO_ENABLED;
 
 @Component
-@ConditionalOnProperty(value = BUILD_INFO_ENABLED, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = BUILD_INFO_ENABLED, havingValue = "true")
 public class BuildInfoFactory {
 
     private static final String BUILD_PROPERTIES_FILE = "build.properties";

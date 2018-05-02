@@ -9,9 +9,9 @@ import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
-import static pl.sparkbit.commons.Properties.REQUEST_LOGGING_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.REQUEST_LOGGING_ENABLED;
 
-@ConditionalOnProperty(value = REQUEST_LOGGING_ENABLED, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = REQUEST_LOGGING_ENABLED, havingValue = "true")
 @Configuration
 @SuppressWarnings("SpringFacetCodeInspection")
 public class RestLoggingFilterConfiguration {

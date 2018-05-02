@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.time.Clock;
 
-import static pl.sparkbit.commons.Properties.CLOCK_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.CLOCK_ENABLED;
 
-@ConditionalOnProperty(value = CLOCK_ENABLED, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = CLOCK_ENABLED, havingValue = "true")
 @Configuration
 @SuppressWarnings("SpringFacetCodeInspection")
 public class ClockConfiguration {

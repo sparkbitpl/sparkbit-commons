@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static pl.sparkbit.commons.Properties.REST_ERROR_ATTRIBUTES_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.REST_ERROR_ATTRIBUTES_ENABLED;
 
 @Component
-@ConditionalOnProperty(value = REST_ERROR_ATTRIBUTES_ENABLED, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = REST_ERROR_ATTRIBUTES_ENABLED, havingValue = "true")
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")

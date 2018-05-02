@@ -7,9 +7,9 @@ import pl.sparkbit.commons.buildinfo.BuildInfoFactory;
 import pl.sparkbit.commons.buildinfo.domain.BuildInfo;
 import pl.sparkbit.commons.buildinfo.service.BuildInfoService;
 
-import static pl.sparkbit.commons.Properties.BUILD_INFO_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.BUILD_INFO_ENABLED;
 
-@ConditionalOnProperty(value = BUILD_INFO_ENABLED, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = BUILD_INFO_ENABLED, havingValue = "true")
 @RequiredArgsConstructor
 @SuppressWarnings("unused")
 @Service

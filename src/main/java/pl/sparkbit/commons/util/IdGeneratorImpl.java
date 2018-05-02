@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-import static pl.sparkbit.commons.Properties.ID_GENERATOR_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.ID_GENERATOR_ENABLED;
 
-@ConditionalOnProperty(value = ID_GENERATOR_ENABLED, havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = ID_GENERATOR_ENABLED, havingValue = "true")
 @Component
 @SuppressWarnings("unused")
 public class IdGeneratorImpl implements IdGenerator {

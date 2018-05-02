@@ -15,7 +15,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Properties;
 
-import static pl.sparkbit.commons.Properties.MYBATIS_METRICS_ENABLED;
+import static pl.sparkbit.commons.CommonsProperties.MYBATIS_METRICS_ENABLED;
 
 /**
  * To use this class it must be registered with MyBatis and implementation of MyBatisMetricsCollector

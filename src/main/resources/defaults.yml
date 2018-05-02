@@ -1,0 +1,18 @@
+sparkbit:
+  commons:
+    build-info-enabled: true
+    clock-enabled: true
+    content-compression:
+      enabled: true
+      threshold: 1024
+    id-generator-enabled: true
+    mail:
+      sendgrid-enabled: false
+    mybatis-metrics-enabled: false
+    request-logging-enabled: true
+    rest-error-attributes-enabled: true
+    statsd:
+      enabled: false
+      port: 8125
+      prefix:
+      host:
