@@ -5,8 +5,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
-
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static pl.sparkbit.commons.CommonsProperties.BUILD_INFO_ENABLED;
 
@@ -19,14 +17,14 @@ public class BuildInfoFilterConfiguration {
 
     @Bean
     public FilterRegistrationBean buildInfoFilterRegistration(BuildInfoFactory buildInfoFactory) {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+        FilterRegistrationBean<BuildInfoFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(buildInfoFilter(buildInfoFactory));
         registration.setOrder(MEDIUM_PRECEDENCE);
         return registration;
     }
 
     @Bean
-    public Filter buildInfoFilter(BuildInfoFactory buildInfoFactory) {
+    public BuildInfoFilter buildInfoFilter(BuildInfoFactory buildInfoFactory) {
         return new BuildInfoFilter(buildInfoFactory);
     }
 }

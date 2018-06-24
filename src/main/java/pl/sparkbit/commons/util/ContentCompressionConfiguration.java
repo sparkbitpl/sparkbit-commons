@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pl.sparkbit.commons.CommonsProperties;
 
-import javax.servlet.Filter;
-
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static pl.sparkbit.commons.CommonsProperties.CONTENT_COMPRESSION_ENABLED;
 
@@ -23,7 +21,7 @@ public class ContentCompressionConfiguration {
 
     @Bean
     public FilterRegistrationBean compressingFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+        FilterRegistrationBean<CompressingFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(compressingFilter());
         String threshold = String.valueOf(configuration.getContentCompression().getThreshold());
         registration.addInitParameter("compressionThreshold", threshold);
@@ -32,7 +30,7 @@ public class ContentCompressionConfiguration {
     }
 
     @Bean
-    public Filter compressingFilter() {
+    public CompressingFilter compressingFilter() {
         return new CompressingFilter();
     }
 }

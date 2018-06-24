@@ -1,5 +1,6 @@
 package pl.sparkbit.commons.restlogger;
 
+import lombok.Getter;
 import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletOutputStream;
@@ -24,6 +25,8 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 
     private boolean usingOutputStream;
     private boolean usingWriter;
+    @Getter
+    private boolean errorSent = false;
 
     ResponseWrapper(HttpServletResponse response) {
         super(response);
@@ -63,5 +66,17 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             logBuilder.append(prompt).append(line).append('\n');
         }
         return logBuilder.deleteCharAt(logBuilder.length() - 1).toString();
+    }
+
+    @Override
+    public void sendError(int sc, String msg) throws IOException {
+        errorSent = true;
+        super.sendError(sc, msg);
+    }
+
+    @Override
+    public void sendError(int sc) throws IOException {
+        errorSent = true;
+        super.sendError(sc);
     }
 }

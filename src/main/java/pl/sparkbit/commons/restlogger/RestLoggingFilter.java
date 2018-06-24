@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static javax.servlet.DispatcherType.ERROR;
 import static javax.servlet.DispatcherType.REQUEST;
-import static org.springframework.web.servlet.DispatcherServlet.EXCEPTION_ATTRIBUTE;
 
 @Slf4j(topic = "restlogger")
 public class RestLoggingFilter extends OncePerRequestFilter {
@@ -37,11 +36,11 @@ public class RestLoggingFilter extends OncePerRequestFilter {
                 request = logRequest(requestId, request);
             }
 
-            response = new ResponseWrapper(response);
-            chain.doFilter(request, response);
+            ResponseWrapper responseWrapper = new ResponseWrapper(response);
+            chain.doFilter(request, responseWrapper);
 
-            if (shouldLogResponse(request)) {
-                logResponse(requestId, request, response);
+            if (shouldLogResponse(request, responseWrapper)) {
+                logResponse(requestId, request, responseWrapper);
             }
         } else {
             chain.doFilter(request, response);
@@ -86,10 +85,13 @@ public class RestLoggingFilter extends OncePerRequestFilter {
         return request;
     }
 
-    private boolean shouldLogResponse(HttpServletRequest request) {
-        //log responses for ERROR dispatch and when there was no exception and thus there will be no ERROR dispatch
-        //don't log response if this is REQUEST dispatch, but there was an exception and ERROR dispatch will follow
-        return request.getDispatcherType() == ERROR || request.getAttribute(EXCEPTION_ATTRIBUTE) == null;
+    private boolean shouldLogResponse(HttpServletRequest request, ResponseWrapper responseWrapper) {
+        //log responses for ERROR dispatch and when there was no error as there will be no ERROR dispatch
+        //don't log response if this is REQUEST dispatch, but there was an exception (ERROR dispatch will follow)
+        if (request.getDispatcherType() == ERROR) {
+            return true;
+        }
+        return !responseWrapper.isErrorSent();
     }
 
     private void logResponse(long requestId, HttpServletRequest request, HttpServletResponse response)
