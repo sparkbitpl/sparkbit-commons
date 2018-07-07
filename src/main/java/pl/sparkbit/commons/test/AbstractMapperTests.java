@@ -4,7 +4,6 @@ import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.operation.Operation;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -16,7 +15,6 @@ import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 
 @RunWith(SpringRunner.class)
 @SuppressWarnings({"SpringJavaAutowiredMembersInspection", "unused"})
-@TestPropertySource("classpath:test.properties")
 public abstract class AbstractMapperTests extends AbstractTransactionalJUnit4SpringContextTests {
 
     private static final String AND = " AND ";

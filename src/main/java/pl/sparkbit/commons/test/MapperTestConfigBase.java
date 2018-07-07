@@ -52,7 +52,7 @@ public class MapperTestConfigBase {
     @Value("${" + TEST_DB_TYPE_ALIASES_PACKAGE + ":}")
     private String typeAliasesPackage;
 
-    @Value("${" + TEST_DB_HANDLER_PACKAGES + "}")
+    @Value("${" + TEST_DB_HANDLER_PACKAGES + ":}")
     private String handlerPackages;
 
     @Bean
