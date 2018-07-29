@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Component
 @ConfigurationProperties("sparkbit.commons")
 @Data
+@SuppressWarnings("WeakerAccess")
 @Validated
 public class CommonsProperties {
 
@@ -72,5 +73,4 @@ public class CommonsProperties {
         private Integer port;
         private String prefix;
     }
-
 }
