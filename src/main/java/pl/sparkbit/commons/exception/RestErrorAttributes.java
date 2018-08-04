@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,27 +36,32 @@ public class RestErrorAttributes extends DefaultErrorAttributes {
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
-        Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, false);
-        Map<String, Object> result = new HashMap<>(errorAttributes);
-        removeUnwantedAttributes(result);
-        changeTimestampToMillis(result);
-        Throwable throwable = getError(webRequest);
+        String contentType = webRequest.getHeader("content-type");
+        if (contentType != null && MediaType.valueOf(contentType).isCompatibleWith(MediaType.APPLICATION_JSON)) {
+            Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, false);
+            Map<String, Object> result = new HashMap<>(errorAttributes);
+            removeUnwantedAttributes(result);
+            changeTimestampToMillis(result);
+            Throwable throwable = getError(webRequest);
 
-        if (throwable == null) {
-            log.error("Runtime exception: {}", result.get("message"));
-        } else if (throwable instanceof BusinessException) {
-            BusinessException businessException = (BusinessException) throwable;
-            result.put("errorCode", businessException.getErrorCode());
-            messagesOpt.ifPresent(messages -> result.put("translatedMessage",
-                    messages.error(businessException.getErrorCode(), businessException.getMessageDetails())));
-            Map<String, Object> additionalErrorDetails = businessException.getAdditionalErrorDetails();
-            if (additionalErrorDetails != null) {
-                result.put("errorDetails", additionalErrorDetails);
+            if (throwable == null) {
+                log.error("Runtime exception: {}", result.get("message"));
+            } else if (throwable instanceof BusinessException) {
+                BusinessException businessException = (BusinessException) throwable;
+                result.put("errorCode", businessException.getErrorCode());
+                messagesOpt.ifPresent(messages -> result.put("translatedMessage",
+                        messages.error(businessException.getErrorCode(), businessException.getMessageDetails())));
+                Map<String, Object> additionalErrorDetails = businessException.getAdditionalErrorDetails();
+                if (additionalErrorDetails != null) {
+                    result.put("errorDetails", additionalErrorDetails);
+                }
+            } else if (!NOT_LOGGABLE_EXCEPTIONS.contains(throwable.getClass())) {
+                log.error("Runtime exception", throwable);
             }
-        } else if (!NOT_LOGGABLE_EXCEPTIONS.contains(throwable.getClass())) {
-            log.error("Runtime exception", throwable);
+            return result;
+        } else {
+            return super.getErrorAttributes(webRequest, includeStackTrace);
         }
-        return result;
     }
 
     private void removeUnwantedAttributes(Map<String, Object> result) {
