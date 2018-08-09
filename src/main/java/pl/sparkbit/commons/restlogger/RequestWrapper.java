@@ -44,7 +44,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     }
 
     private String hidePassword(String line) {
-        return line.replaceAll("\"password\"(\\s*):(\\s*)\".*\"", "\"password\"$1:$2\"**********\"");
+        return line.replaceAll("\"password\"(\\s*):(\\s*)\"[^\"]*\"", "\"password\"$1:$2\"**********\"");
     }
 
     @Override
