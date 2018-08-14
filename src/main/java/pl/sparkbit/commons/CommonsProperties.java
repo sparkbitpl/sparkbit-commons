@@ -16,7 +16,6 @@ public class CommonsProperties {
 
     private static final String PREFIX = "sparkbit.commons.";
 
-    public static final String BUILD_INFO_ENABLED = PREFIX + "build-info-enabled";
     public static final String CLOCK_ENABLED = PREFIX + "clock-enabled";
     public static final String CONTENT_COMPRESSION_ENABLED = PREFIX + "content-compression.enabled";
     public static final String ID_GENERATOR_ENABLED = PREFIX + "id-generator-enabled";
@@ -26,8 +25,6 @@ public class CommonsProperties {
     public static final String REST_ERROR_ATTRIBUTES_ENABLED = PREFIX + "rest-error-attributes-enabled";
     public static final String STATSD_ENABLED = PREFIX + "statsd.enabled";
 
-    @NotNull
-    private Boolean buildInfoEnabled;
     @NotNull
     private Boolean clockEnabled;
     @NotNull

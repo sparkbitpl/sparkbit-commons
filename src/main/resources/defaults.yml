@@ -1,6 +1,5 @@
 sparkbit:
   commons:
-    build-info-enabled: true
     clock-enabled: true
     content-compression:
       enabled: true
