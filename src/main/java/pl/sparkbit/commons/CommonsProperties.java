@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Component
 @ConfigurationProperties("sparkbit.commons")
@@ -40,6 +41,8 @@ public class CommonsProperties {
     @NotNull
     private Boolean restErrorAttributesEnabled;
     @NotNull
+    private RestLogger restLogger;
+    @NotNull
     private Statsd statsd;
 
     @Data
@@ -59,6 +62,12 @@ public class CommonsProperties {
         private String sendgridApiKey;
         @NotNull
         private Boolean sendgridEnabled;
+    }
+
+    @Data
+    @Validated
+    public static class RestLogger {
+        private List<String> excludeUrlPatterns;
     }
 
     @Data

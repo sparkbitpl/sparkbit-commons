@@ -1,9 +1,11 @@
 package pl.sparkbit.commons.restlogger;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pl.sparkbit.commons.CommonsProperties;
 
 import javax.servlet.DispatcherType;
 
@@ -12,10 +14,13 @@ import static pl.sparkbit.commons.CommonsProperties.REQUEST_LOGGING_ENABLED;
 
 @ConditionalOnProperty(value = REQUEST_LOGGING_ENABLED, havingValue = "true")
 @Configuration
+@RequiredArgsConstructor
 @SuppressWarnings("SpringFacetCodeInspection")
 public class RestLoggingFilterConfiguration {
 
     private static final Integer RIGHT_AFTER_HIGHEST_PRECEDENCE = HIGHEST_PRECEDENCE + 1;
+
+    private final CommonsProperties config;
 
     @Bean
     public FilterRegistrationBean requestLoggingFilterRegistration() {
@@ -29,6 +34,6 @@ public class RestLoggingFilterConfiguration {
 
     @Bean
     public RestLoggingFilter requestLoggingFilter() {
-        return new RestLoggingFilter();
+        return new RestLoggingFilter(config.getRestLogger().getExcludeUrlPatterns());
     }
 }

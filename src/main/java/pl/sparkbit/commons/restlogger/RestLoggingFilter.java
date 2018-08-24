@@ -1,9 +1,11 @@
 package pl.sparkbit.commons.restlogger;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -13,17 +15,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static javax.servlet.DispatcherType.ERROR;
 import static javax.servlet.DispatcherType.REQUEST;
 
+@RequiredArgsConstructor
 @Slf4j(topic = "restlogger")
 public class RestLoggingFilter extends OncePerRequestFilter {
 
     private static final String REQUEST_ID_ATTRIBUTE = "logging.requestId";
 
     private final AtomicLong id = new AtomicLong(0);
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
+
+    private final List<String> excludeUrlPatterns;
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -51,6 +58,11 @@ public class RestLoggingFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilterErrorDispatch() {
         //we need this filter to be run also for ERROR dispatch - to log error responses
         return false;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return excludeUrlPatterns.stream().anyMatch(p -> pathMatcher.match(p, request.getServletPath()));
     }
 
     private long getRequestId(HttpServletRequest request) {

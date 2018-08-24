@@ -10,6 +10,7 @@ sparkbit:
     mybatis-metrics-enabled: false
     request-logging-enabled: true
     rest-error-attributes-enabled: true
+    rest-logger.exclude-url-patterns:
     statsd:
       enabled: false
       port: 8125
