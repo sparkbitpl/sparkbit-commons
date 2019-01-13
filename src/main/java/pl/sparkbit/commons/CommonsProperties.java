@@ -24,7 +24,6 @@ public class CommonsProperties {
     public static final String MYBATIS_METRICS_ENABLED = PREFIX + "mybatis-metrics.enabled";
     public static final String REQUEST_LOGGING_ENABLED = PREFIX + "request-logging-enabled";
     public static final String REST_ERROR_ATTRIBUTES_ENABLED = PREFIX + "rest-error-attributes-enabled";
-    public static final String STATSD_ENABLED = PREFIX + "statsd.enabled";
 
     @NotNull
     private Boolean clockEnabled;
@@ -40,8 +39,6 @@ public class CommonsProperties {
     private Boolean restErrorAttributesEnabled;
     @NotNull
     private RestLogger restLogger;
-    @NotNull
-    private Statsd statsd;
 
     @Data
     @Validated
@@ -58,13 +55,4 @@ public class CommonsProperties {
         private List<String> excludeUrlPatterns;
     }
 
-    @Data
-    @Validated
-    public static class Statsd {
-        @NotNull
-        private Boolean enabled;
-        private String host;
-        private Integer port;
-        private String prefix;
-    }
 }
