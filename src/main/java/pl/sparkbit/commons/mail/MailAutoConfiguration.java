@@ -5,8 +5,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static pl.sparkbit.commons.CommonsProperties.MAIL_SENDGRID_ENABLED;
+
 @Configuration
-@ConditionalOnProperty(value = "sparkbit.commons.mail.sendgrid-enabled", havingValue = "true")
+@ConditionalOnProperty(value = MAIL_SENDGRID_ENABLED, havingValue = "true")
 @EnableConfigurationProperties(MailProperties.class)
 public class MailAutoConfiguration {
 

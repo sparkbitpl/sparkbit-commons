@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
-@Component
 @RequiredArgsConstructor
 public class Messages {
 

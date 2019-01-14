@@ -12,7 +12,7 @@ import javax.servlet.DispatcherType;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
-@ConditionalOnProperty(value = RestLoggerProperties.REST_LOGGER_ENABLED, havingValue = "true")
+@ConditionalOnProperty(value = RestLoggerProperties.REST_LOGGER_ENABLED, havingValue = "true", matchIfMissing = true)
 @Configuration
 @EnableConfigurationProperties(RestLoggerProperties.class)
 @RequiredArgsConstructor
@@ -23,7 +23,8 @@ public class RestLoggingFilterAutoConfiguration {
 
     @Bean
     public FilterRegistrationBean<CommonsRequestLoggingFilter> requestLoggingFilterRegistration(
-        CommonsRequestLoggingFilter filter) {
+        RestLoggingFilter filter) {
+
         FilterRegistrationBean<CommonsRequestLoggingFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(filter);
         //this filter should run very early in the chain - possibly only after compression filter

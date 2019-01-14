@@ -3,16 +3,9 @@ package pl.sparkbit.commons.util;
 import com.fasterxml.uuid.EthernetAddress;
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-import static pl.sparkbit.commons.CommonsProperties.ID_GENERATOR_ENABLED;
-
-@ConditionalOnProperty(value = ID_GENERATOR_ENABLED, havingValue = "true")
-@Component
-@SuppressWarnings("unused")
 public class IdGeneratorImpl implements IdGenerator {
 
     private final TimeBasedGenerator generator = Generators.timeBasedGenerator(EthernetAddress.fromInterface());

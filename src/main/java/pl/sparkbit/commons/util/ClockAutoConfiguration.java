@@ -8,10 +8,10 @@ import java.time.Clock;
 
 import static pl.sparkbit.commons.CommonsProperties.CLOCK_ENABLED;
 
-@ConditionalOnProperty(value = CLOCK_ENABLED, havingValue = "true")
+@ConditionalOnProperty(value = CLOCK_ENABLED, havingValue = "true", matchIfMissing = true)
 @Configuration
 @SuppressWarnings("SpringFacetCodeInspection")
-public class ClockConfiguration {
+public class ClockAutoConfiguration {
 
     @Bean
     public Clock clock() {

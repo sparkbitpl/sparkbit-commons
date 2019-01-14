@@ -61,7 +61,6 @@
         </module>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
-        <module name="MagicNumber"/>
         <module name="MemberName"/>
         <module name="MethodLength"/>
         <module name="MethodName"/>

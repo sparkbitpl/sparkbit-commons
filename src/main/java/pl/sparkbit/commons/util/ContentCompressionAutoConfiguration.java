@@ -3,27 +3,28 @@ package pl.sparkbit.commons.util;
 import com.github.ziplet.filter.compression.CompressingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.sparkbit.commons.CommonsProperties;
 
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 import static pl.sparkbit.commons.CommonsProperties.CONTENT_COMPRESSION_ENABLED;
 
-@ConditionalOnProperty(value = CONTENT_COMPRESSION_ENABLED, havingValue = "true")
 @Configuration
+@EnableConfigurationProperties(ContentCompressionProperties.class)
+@ConditionalOnProperty(value = CONTENT_COMPRESSION_ENABLED, havingValue = "true", matchIfMissing = true)
 @RequiredArgsConstructor
 @SuppressWarnings("SpringFacetCodeInspection")
-public class ContentCompressionConfiguration {
+public class ContentCompressionAutoConfiguration {
 
-    private final CommonsProperties configuration;
+    private final ContentCompressionProperties configuration;
 
     @Bean
-    public FilterRegistrationBean compressingFilterRegistration() {
+    public FilterRegistrationBean<CompressingFilter> compressingFilterRegistration() {
         FilterRegistrationBean<CompressingFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(compressingFilter());
-        String threshold = String.valueOf(configuration.getContentCompression().getThreshold());
+        String threshold = String.valueOf(configuration.getThreshold());
         registration.addInitParameter("compressionThreshold", threshold);
         registration.setOrder(HIGHEST_PRECEDENCE);
         return registration;
@@ -34,3 +35,4 @@ public class ContentCompressionConfiguration {
         return new CompressingFilter();
     }
 }
+
