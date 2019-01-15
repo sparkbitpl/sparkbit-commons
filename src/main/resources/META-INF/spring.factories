@@ -1,1 +1,5 @@
-org.springframework.boot.env.EnvironmentPostProcessor=pl.sparkbit.commons.YamlDefaultEnvironmentPostProcessor
+org.springframework.boot.env.EnvironmentPostProcessor=\
+pl.sparkbit.commons.YamlDefaultEnvironmentPostProcessor
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+pl.sparkbit.commons.mail.MailAutoConfiguration

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 @Component
@@ -20,7 +21,6 @@ public class CommonsProperties {
     public static final String CLOCK_ENABLED = PREFIX + "clock-enabled";
     public static final String CONTENT_COMPRESSION_ENABLED = PREFIX + "content-compression.enabled";
     public static final String ID_GENERATOR_ENABLED = PREFIX + "id-generator-enabled";
-    public static final String MAIL_SENDGRID_ENABLED = PREFIX + "mail.sendgrid-enabled";
     public static final String MYBATIS_METRICS_ENABLED = PREFIX + "mybatis-metrics.enabled";
     public static final String REQUEST_LOGGING_ENABLED = PREFIX + "request-logging-enabled";
     public static final String REST_ERROR_ATTRIBUTES_ENABLED = PREFIX + "rest-error-attributes-enabled";
@@ -32,8 +32,6 @@ public class CommonsProperties {
     private ContentCompression contentCompression;
     @NotNull
     private Boolean idGeneratorEnabled;
-    @NotNull
-    private Mail mail;
     @NotNull
     private Boolean mybatisMetricsEnabled;
     @NotNull
@@ -52,16 +50,6 @@ public class CommonsProperties {
         private Boolean enabled;
         @NotNull
         private Integer threshold;
-    }
-
-    @Data
-    @Validated
-    public static class Mail {
-        private String defaultSenderAddress;
-        private String defaultSenderName;
-        private String sendgridApiKey;
-        @NotNull
-        private Boolean sendgridEnabled;
     }
 
     @Data

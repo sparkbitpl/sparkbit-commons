@@ -1,23 +1,19 @@
 package pl.sparkbit.commons.mail;
 
-import com.sendgrid.*;
+import com.sendgrid.Email;
 import com.sendgrid.Mail;
+import com.sendgrid.Method;
+import com.sendgrid.Personalization;
+import com.sendgrid.Request;
+import com.sendgrid.SendGrid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Service;
-import pl.sparkbit.commons.CommonsProperties;
 import pl.sparkbit.commons.exception.InternalException;
 
 import java.io.IOException;
 import java.util.Map;
 
 import static java.util.Collections.emptyMap;
-import static pl.sparkbit.commons.CommonsProperties.*;
 
-@ConditionalOnProperty(value = MAIL_SENDGRID_ENABLED, havingValue = "true")
-@SuppressWarnings("unused")
-@Service
 @Slf4j
 public class SendGridMailServiceImpl implements MailService {
 
@@ -25,23 +21,23 @@ public class SendGridMailServiceImpl implements MailService {
     private static final String TEMPLATE_VARIABLE_MARKER = "%";
 
     private final SendGrid sendGrid;
+    private final MailProperties mailProperties;
 
-    private CommonsProperties configuration;
-
-    public SendGridMailServiceImpl(@Value("#{commonsProperties.getMail().sendgridApiKey()}") String sendGridApiKey) {
-        sendGrid = new SendGrid(sendGridApiKey);
+    public SendGridMailServiceImpl(MailProperties mailProperties) {
+        this.sendGrid = new SendGrid(mailProperties.getSendgridApiKey());
+        this.mailProperties = mailProperties;
     }
 
     @Override
     public void sendMail(String templateId, String to) {
-        sendMail(templateId, to, configuration.getMail().getDefaultSenderAddress(),
-                configuration.getMail().getDefaultSenderName(), emptyMap());
+        sendMail(templateId, to, mailProperties.getDefaultSenderAddress(),
+            mailProperties.getDefaultSenderName(), emptyMap());
     }
 
     @Override
     public void sendMail(String templateId, String to, Map<String, String> params) {
-        sendMail(templateId, to, configuration.getMail().getDefaultSenderAddress(),
-                configuration.getMail().getDefaultSenderName(), params);
+        sendMail(templateId, to, mailProperties.getDefaultSenderAddress(),
+            mailProperties.getDefaultSenderName(), params);
     }
 
     @Override
@@ -70,8 +66,7 @@ public class SendGridMailServiceImpl implements MailService {
             request.body = mail.build();
             sendGrid.api(request);
         } catch (IOException e) {
-            log.error("Error while sending mail to %s", to);
-            throw new InternalException("Sending email failed");
+            throw new InternalException("Sending email failed", e);
         }
     }
 
