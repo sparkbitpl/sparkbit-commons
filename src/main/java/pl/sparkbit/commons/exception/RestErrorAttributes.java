@@ -3,6 +3,7 @@ package pl.sparkbit.commons.exception;
 import com.google.common.collect.ImmutableSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ import static pl.sparkbit.commons.CommonsProperties.REST_ERROR_ATTRIBUTES_ENABLE
 public class RestErrorAttributes extends DefaultErrorAttributes {
 
     private static final Set<Class> NOT_LOGGABLE_EXCEPTIONS = ImmutableSet.of(
+            TypeMismatchException.class,
             MethodArgumentNotValidException.class,
             AccessDeniedException.class);
 
@@ -56,7 +58,7 @@ public class RestErrorAttributes extends DefaultErrorAttributes {
                 if (additionalErrorDetails != null) {
                     errorAttributes.put("errorDetails", additionalErrorDetails);
                 }
-            } else if (!NOT_LOGGABLE_EXCEPTIONS.contains(throwable.getClass())) {
+            } else if (NOT_LOGGABLE_EXCEPTIONS.stream().noneMatch(nlec -> nlec.isInstance(throwable))) {
                 log.error("Runtime exception", throwable);
             }
             return errorAttributes;
