@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import javax.servlet.DispatcherType;
 
@@ -22,10 +21,10 @@ public class RestLoggingFilterAutoConfiguration {
     private static final int RIGHT_AFTER_HIGHEST_PRECEDENCE = HIGHEST_PRECEDENCE + 1;
 
     @Bean
-    public FilterRegistrationBean<CommonsRequestLoggingFilter> requestLoggingFilterRegistration(
+    public FilterRegistrationBean<RestLoggingFilter> requestLoggingFilterRegistration(
         RestLoggingFilter filter) {
 
-        FilterRegistrationBean<CommonsRequestLoggingFilter> registration = new FilterRegistrationBean<>();
+        FilterRegistrationBean<RestLoggingFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(filter);
         //this filter should run very early in the chain - possibly only after compression filter
         registration.setOrder(RIGHT_AFTER_HIGHEST_PRECEDENCE);
