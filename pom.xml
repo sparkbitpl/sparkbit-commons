@@ -109,9 +109,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Commented this as Nexus has problems
-            "Return code is: 400, ReasonPhrase: Repository does not allow updating assets" -->
-            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -124,7 +121,6 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
         </plugins>
     </build>
 
