@@ -20,19 +20,19 @@ public class InstantAsIntegerTypeHandler extends BaseTypeHandler<Instant> {
 
     @Override
     public Instant getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        Long instant = rs.getLong(columnName);
-        return Instant.ofEpochMilli(instant);
+        long instant = rs.getLong(columnName);
+        return rs.wasNull() ? null : Instant.ofEpochMilli(instant);
     }
 
     @Override
     public Instant getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        Long instant = rs.getLong(columnIndex);
-        return Instant.ofEpochMilli(instant);
+        long instant = rs.getLong(columnIndex);
+        return rs.wasNull() ? null : Instant.ofEpochMilli(instant);
     }
 
     @Override
     public Instant getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        Long instant = cs.getLong(columnIndex);
-        return Instant.ofEpochMilli(instant);
+        long instant = cs.getLong(columnIndex);
+        return cs.wasNull() ? null : Instant.ofEpochMilli(instant);
     }
 }

@@ -21,18 +21,18 @@ public class DurationTypeHandler extends BaseTypeHandler<Duration> {
     @Override
     public Duration getNullableResult(ResultSet rs, String columnName) throws SQLException {
         long duration = rs.getLong(columnName);
-        return Duration.ofMillis(duration);
+        return rs.wasNull() ? null : Duration.ofMillis(duration);
     }
 
     @Override
     public Duration getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
         long duration = rs.getLong(columnIndex);
-        return Duration.ofMillis(duration);
+        return rs.wasNull() ? null : Duration.ofMillis(duration);
     }
 
     @Override
     public Duration getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
         long duration = cs.getLong(columnIndex);
-        return Duration.ofMillis(duration);
+        return cs.wasNull() ? null : Duration.ofMillis(duration);
     }
 }
