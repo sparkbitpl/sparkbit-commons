@@ -15,7 +15,7 @@ import static com.ninja_squad.dbsetup.Operations.sequenceOf;
 
 @RunWith(SpringRunner.class)
 @SuppressWarnings({"SpringJavaAutowiredMembersInspection", "unused"})
-public abstract class AbstractMapperTests extends AbstractTransactionalJUnit4SpringContextTests {
+public abstract class MapperTestBase extends AbstractTransactionalJUnit4SpringContextTests {
 
     private static final String AND = " AND ";
 
