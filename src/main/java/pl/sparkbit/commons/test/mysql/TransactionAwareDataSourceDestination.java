@@ -1,4 +1,4 @@
-package pl.sparkbit.commons.test;
+package pl.sparkbit.commons.test.mysql;
 
 import com.ninja_squad.dbsetup.destination.Destination;
 import lombok.EqualsAndHashCode;

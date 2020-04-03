@@ -15,7 +15,6 @@ import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 @Configuration
 @EnableConfigurationProperties(RestLoggerProperties.class)
 @RequiredArgsConstructor
-@SuppressWarnings("SpringFacetCodeInspection")
 public class RestLoggingFilterAutoConfiguration {
 
     private static final int RIGHT_AFTER_HIGHEST_PRECEDENCE = HIGHEST_PRECEDENCE + 1;

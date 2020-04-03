@@ -10,7 +10,6 @@ import static pl.sparkbit.commons.CommonsProperties.CLOCK_ENABLED;
 
 @ConditionalOnProperty(value = CLOCK_ENABLED, havingValue = "true", matchIfMissing = true)
 @Configuration
-@SuppressWarnings("SpringFacetCodeInspection")
 public class ClockAutoConfiguration {
 
     @Bean
