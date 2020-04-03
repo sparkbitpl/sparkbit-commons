@@ -305,12 +305,6 @@
             <artifactId>cassandra</artifactId>
             <version>${testcontainers.version}</version>
             <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.java.dev.jna</groupId>
-                    <artifactId>jna</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- Required because testcontainers 1.13 requires newer jna than spring-boot 2.2.6 -->
         <dependency>
