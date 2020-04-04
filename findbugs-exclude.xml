@@ -6,12 +6,8 @@
         <Class name="pl.sparkbit.commons.test.mysql.TransactionAwareDataSourceDestination$TransactionAwareInvocationHandler"/>
         <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS,SE_BAD_FIELD_INNER_CLASS"/>
     </Match>
+
     <Match>
-        <Class name="pl.sparkbit.commons.test.cassandra.CassandraTestConfigBase"/>
-        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
-    </Match>
-    <Match>
-        <Class name="pl.sparkbit.commons.test.redis.RedisTestConfigBase"/>
-        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
+        <Source name="~.*\.kt"/>
     </Match>
 </FindBugsFilter>
