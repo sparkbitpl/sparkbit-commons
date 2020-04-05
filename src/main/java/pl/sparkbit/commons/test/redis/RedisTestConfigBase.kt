@@ -35,8 +35,8 @@ open class RedisTestConfigBase {
     }
 
     companion object {
-        private const val TEST_REDIS_IMAGE = "redisTest.image"
-        private const val TEST_REDIS_EXPOSED_PORT = "redisTest.exposedPort"
+        private const val TEST_REDIS_IMAGE = "redis-test.image"
+        private const val TEST_REDIS_EXPOSED_PORT = "redis-test.exposed-port"
     }
 }
 

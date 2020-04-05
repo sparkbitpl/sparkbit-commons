@@ -67,10 +67,10 @@ open class CassandraTestConfigBase : AbstractCassandraConfiguration() {
     }
 
     companion object {
-        private const val TEST_CASSANDRA_IMAGE = "cassandraTest.image"
-        const val TEST_CASSANDRA_KEYSPACE = "cassandraTest.keyspace"
-        private const val TEST_CASSANDRA_BASE_PACKAGE = "cassandraTest.basePackage"
-        private const val TEST_CASSANDRA_INIT_SCRIPTS = "cassandraTest.initScripts"
+        private const val TEST_CASSANDRA_IMAGE = "cassandra-test.image"
+        const val TEST_CASSANDRA_KEYSPACE = "cassandra-test.keyspace"
+        private const val TEST_CASSANDRA_BASE_PACKAGE = "cassandra-test.base-package"
+        private const val TEST_CASSANDRA_INIT_SCRIPTS = "cassandra-test.init-scripts"
     }
 }
 

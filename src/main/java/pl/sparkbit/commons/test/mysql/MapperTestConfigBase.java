@@ -21,19 +21,19 @@ import java.util.Arrays;
 @SuppressWarnings("unused")
 public class MapperTestConfigBase {
 
-    private static final String TEST_DB_PREFIX = "mapperTest.db.";
+    private static final String TEST_DB_PREFIX = "mapper-test.db.";
 
-    private static final String TEST_DB_HANDLER_PACKAGES = TEST_DB_PREFIX + "handlerPackages";
-    private static final String TEST_DB_SCHEMA_FILES = TEST_DB_PREFIX + "schemaFiles";
-    private static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "typeAliasesPackage";
+    private static final String TEST_DB_HANDLER_PACKAGES = TEST_DB_PREFIX + "handler-packages";
+    private static final String TEST_DB_SCHEMA_FILES = TEST_DB_PREFIX + "schema-files";
+    private static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "type-aliases-package";
     private static final String TEST_DB_MYSQL_VERSION = TEST_DB_PREFIX + "mysql.version";
-    private static final String TEST_DB_MYSQL_CONFIG_DIR = TEST_DB_PREFIX + "mysql.configDir";
+    private static final String TEST_DB_MYSQL_CONFIG_DIR = TEST_DB_PREFIX + "mysql.config-dir";
 
 
     @Value("classpath*:mybatis/*-mapper.xml")
     private Resource[] mappers;
 
-    @Value("${" + TEST_DB_SCHEMA_FILES + ":sql/schema.sql}")
+    @Value("${" + TEST_DB_SCHEMA_FILES + ":}")
     private String[] schemaFiles;
 
     @Value("${" + TEST_DB_HANDLER_PACKAGES + ":}")
