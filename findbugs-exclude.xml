@@ -10,4 +10,7 @@
     <Match>
         <Source name="~.*\.kt"/>
     </Match>
+    <Match>
+        <Source name="~.*\.groovy"/>
+    </Match>
 </FindBugsFilter>
