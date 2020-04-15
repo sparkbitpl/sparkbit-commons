@@ -90,8 +90,8 @@ public class OutputSizeCappingFilter extends TurboFilter {
         long newBytesEstimate = logger.getName().length() * 2
                 + level.toString().length() * 2
                 + format.length()
-                + Arrays.stream(params).mapToInt(o -> o.toString().length()).sum()
-                + Arrays.stream(t.getStackTrace()).mapToInt(o -> o.toString().length()).sum();
+                + Arrays.stream(params).filter(s -> s != null).mapToInt(o -> o.toString().length()).sum()
+                + Arrays.stream(t.getStackTrace()).filter(s -> s != null).mapToInt(o -> o.toString().length()).sum();
         long totalSize = epoch.incrementCounter(newBytesEstimate);
         if (totalSize > maxBytes) {
             epoch.reportOnce();
