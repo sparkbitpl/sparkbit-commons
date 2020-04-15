@@ -91,10 +91,13 @@ public class OutputSizeCappingFilter extends TurboFilter {
                 + ((level != null) ? level.toString().length() * 2 : 0)
                 + ((format != null) ? format.length() : 0)
                 + ((params != null) ? Arrays.stream(params)
-                    .filter(s -> s != null)
-                    .mapToInt(o -> o.toString().length())
-                    .sum() : 0)
-                + Arrays.stream(t.getStackTrace()).filter(s -> s != null).mapToInt(o -> o.toString().length()).sum();
+                        .filter(s -> s != null)
+                        .mapToInt(o -> o.toString().length())
+                        .sum() : 0)
+                + ((t != null) ? Arrays.stream(t.getStackTrace())
+                        .filter(s -> s != null)
+                        .mapToInt(o -> o.toString().length())
+                        .sum() : 0);
         long totalSize = epoch.incrementCounter(newBytesEstimate);
         if (totalSize > maxBytes) {
             epoch.reportOnce();
