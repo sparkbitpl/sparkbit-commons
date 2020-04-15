@@ -88,8 +88,8 @@ public class OutputSizeCappingFilter extends TurboFilter {
         EpochBytesCounter epoch = currentEpoch();
 
         long newBytesEstimate = logger.getName().length() * 2
-                + level.toString().length() * 2
-                + format.length()
+                + ((level != null) ? level.toString().length() * 2 : 0)
+                + ((format != null) ? format.length() : 0)
                 + ((params != null) ? Arrays.stream(params)
                     .filter(s -> s != null)
                     .mapToInt(o -> o.toString().length())
