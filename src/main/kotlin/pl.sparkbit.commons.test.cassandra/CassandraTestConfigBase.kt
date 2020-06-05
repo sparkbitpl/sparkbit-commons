@@ -38,7 +38,6 @@ open class CassandraTestConfigBase : AbstractCassandraConfiguration() {
     override fun getContactPoints(): String = cassandraContainerState().containerIpAddress
     override fun getPort(): Int = cassandraContainerState().getMappedPort(CassandraContainer.CQL_PORT)
     override fun getKeyspaceName() = keyspace
-    override fun getMetricsEnabled() = false
     override fun getEntityBasePackages() = if (basePackage != null) arrayOf(basePackage) else arrayOf()
 
     override fun getStartupScripts(): MutableList<String> {

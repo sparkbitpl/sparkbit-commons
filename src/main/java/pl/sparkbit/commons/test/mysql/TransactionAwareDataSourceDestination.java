@@ -34,7 +34,7 @@ public class TransactionAwareDataSourceDestination implements Destination {
     @Override
     public Connection getConnection() {
         return (Connection) Proxy.newProxyInstance(ConnectionProxy.class.getClassLoader(),
-                new Class[]{ConnectionProxy.class}, new TransactionAwareInvocationHandler(dataSource));
+            new Class[]{ConnectionProxy.class}, new TransactionAwareInvocationHandler(dataSource));
     }
 
     private class TransactionAwareInvocationHandler extends DefaultTransactionDefinition implements InvocationHandler {
