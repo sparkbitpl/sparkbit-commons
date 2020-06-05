@@ -1,11 +1,11 @@
 package pl.sparkbit.commons.mail;
 
-import com.sendgrid.Email;
-import com.sendgrid.Mail;
 import com.sendgrid.Method;
-import com.sendgrid.Personalization;
 import com.sendgrid.Request;
 import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Email;
+import com.sendgrid.helpers.mail.objects.Personalization;
 import lombok.extern.slf4j.Slf4j;
 import pl.sparkbit.commons.exception.InternalException;
 
@@ -47,7 +47,7 @@ public class SendGridMailServiceImpl implements MailService {
 
     @Override
     public void sendMail(String templateId, String to, String senderAddress, String senderName,
-                         Map<String, String> params) {
+        Map<String, String> params) {
         Mail mail = new Mail();
         mail.setFrom(new Email(senderAddress, senderName));
         mail.setTemplateId(templateId);
@@ -59,11 +59,11 @@ public class SendGridMailServiceImpl implements MailService {
         mail.addPersonalization(personalization);
 
         Request request = new Request();
-        request.method = Method.POST;
-        request.endpoint = MAIL_SEND_ENDPOINT;
+        request.setMethod(Method.POST);
+        request.setEndpoint(MAIL_SEND_ENDPOINT);
 
         try {
-            request.body = mail.build();
+            request.setBody(mail.build());
             sendGrid.api(request);
         } catch (IOException e) {
             throw new InternalException("Sending email failed", e);
