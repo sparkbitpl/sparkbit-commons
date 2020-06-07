@@ -15,6 +15,7 @@ public abstract class CommonsProperties {
     public static final String ID_GENERATOR_ENABLED = PREFIX + ".id-generator-enabled";
     public static final String MYBATIS_METRICS_ENABLED = PREFIX + ".mybatis-metrics.enabled";
     public static final String REST_ERROR_ATTRIBUTES_ENABLED = PREFIX + ".rest-error-attributes-enabled";
-    public static final String REST_LOGGER = PREFIX + ".rest-logger";
-    public static final String REQ_LOGGING_ENABLED = PREFIX + ".request-logging-enabled";
+    public static final String ECS_METADATA_INFO_CONTRIBUTOR_ENABLED =
+            PREFIX + ".ecs-metadata-info-contributor-enabled";
+    public static final String RUNTIME_INFO_CONTRIBUTOR_ENABLED = PREFIX + ".runtime-info-contributor-enabled";
 }

@@ -24,7 +24,7 @@ public class SpringFactoriesTest {
     public void testRegisteredAutoConfigurations() {
         List<String> classNames = loadFactoryNames(EnableAutoConfiguration.class);
         List<? extends Class<?>> autoConfigurationClasses = classNames.stream().map(this::loadClass).collect(Collectors.toList());
-        assertThat(autoConfigurationClasses).allMatch(new HasAnnotation(Configuration.class)).hasSize(8);
+        assertThat(autoConfigurationClasses).allMatch(new HasAnnotation(Configuration.class)).hasSize(10);
     }
 
     private Class<?> loadClass(String name) {

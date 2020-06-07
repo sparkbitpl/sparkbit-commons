@@ -95,6 +95,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Does not work with JDK 14?
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
@@ -108,28 +109,29 @@
                 <executions>
                     <execution>
                         <id>Findbugs</id>
-                        <!-- We want to run it before package, as package is the most commonly invoked phase
-                        and we want it to fail if this check fails -->
+                        &lt;!&ndash; We want to run it before package, as package is the most commonly invoked phase
+                        and we want it to fail if this check fails &ndash;&gt;
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
+                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>ktlint</id>
-                        <phase>verify</phase>
+                        <phase>prepare-package</phase>
                         <configuration>
                             <target name="ktlint">
                                 <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
                                       classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
-                                    <arg value="src/**/*.kt"/>
+                                    <arg value="src/main/kotlin/**/*.kt"/>
                                 </java>
                             </target>
                         </configuration>
@@ -142,7 +144,7 @@
                                 <java taskname="ktlint" dir="${basedir}" fork="true" failonerror="true"
                                       classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                                     <arg value="-F"/>
-                                    <arg value="src/**/*.kt"/>
+                                    <arg value="src/main/kotlin/**/*.kt"/>
                                 </java>
                             </target>
                         </configuration>
@@ -153,6 +155,7 @@
                     <dependency>
                         <groupId>com.pinterest</groupId>
                         <artifactId>ktlint</artifactId>
+                        <!-- This version doesn't work on Windows: https://github.com/pinterest/ktlint/issues/761 -->
                         <version>0.37.0</version>
                     </dependency>
                     <!-- additional 3rd party ruleset(s) can be specified here -->
@@ -165,7 +168,7 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>process-sources</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>
@@ -243,6 +246,7 @@
                     <linkXRef>false</linkXRef>
                 </configuration>
             </plugin>
+            <!-- Does not work with JDK 14?
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
@@ -255,6 +259,7 @@
                     <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
                 </configuration>
             </plugin>
+            -->
         </plugins>
     </reporting>
 
@@ -441,6 +446,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
             <optional>true</optional>
         </dependency>
 
