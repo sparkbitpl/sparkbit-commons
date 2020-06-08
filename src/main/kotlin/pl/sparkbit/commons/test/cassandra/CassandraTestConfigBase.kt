@@ -39,6 +39,7 @@ open class CassandraTestConfigBase : AbstractCassandraConfiguration() {
     override fun getPort(): Int = cassandraContainerState().getMappedPort(CassandraContainer.CQL_PORT)
     override fun getKeyspaceName() = keyspace
     override fun getEntityBasePackages() = if (basePackage != null) arrayOf(basePackage) else arrayOf()
+    override fun getLocalDataCenter(): String = "datacenter1"
 
     override fun getStartupScripts(): MutableList<String> {
         val result: MutableList<String> = mutableListOf()

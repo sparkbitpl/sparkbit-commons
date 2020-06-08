@@ -1,6 +1,6 @@
 package pl.sparkbit.commons.test.cassandra
 
-import com.datastax.driver.core.Session
+import com.datastax.oss.driver.api.core.CqlSession
 import org.junit.After
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,14 +15,14 @@ import pl.sparkbit.commons.test.cassandra.CassandraTestConfigBase.Companion.TEST
 open class CassandraDaoTestBase {
 
     @Autowired
-    protected lateinit var session: Session
+    protected lateinit var session: CqlSession
 
     @Value("\${$TEST_CASSANDRA_KEYSPACE}")
     private lateinit var keyspace: String
 
     @After
     fun cleanupAfterTest() {
-        val tables = session.cluster.metadata.getKeyspace(keyspace).tables
+        val tables = session.metadata.getKeyspace(keyspace).get().tables.values
         tables.forEach { t -> session.execute("TRUNCATE " + t.name) }
     }
 }
