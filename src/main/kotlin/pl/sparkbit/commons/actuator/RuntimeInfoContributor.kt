@@ -5,10 +5,8 @@ import org.springframework.boot.actuate.info.Info
 import org.springframework.boot.actuate.info.InfoContributor
 import org.springframework.core.SpringVersion
 import org.springframework.core.env.Environment
-import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
 
-@Component
 class RuntimeInfoContributor(
     private val environment: Environment
 ) : InfoContributor {

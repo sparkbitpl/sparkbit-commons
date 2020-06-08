@@ -1,22 +1,18 @@
 package pl.sparkbit.commons.actuator
 
 import mu.KotlinLogging
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.actuate.info.Info
 import org.springframework.boot.actuate.info.InfoContributor
 import org.springframework.http.ResponseEntity
-import org.springframework.stereotype.Component
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForEntity
 import javax.annotation.PostConstruct
 
-@Component
-class EcsMetadataInfoContributor : InfoContributor {
-    @Value("\${ECS_CONTAINER_METADATA_URI:#{null}}")
-    private val metadataUri: String = ""
+class EcsMetadataInfoContributor(
+    private val metadataUri: String
+) : InfoContributor {
     private val details = HashMap<String, Map<String, Any>>()
-
     private val log = KotlinLogging.logger {}
 
     @PostConstruct
