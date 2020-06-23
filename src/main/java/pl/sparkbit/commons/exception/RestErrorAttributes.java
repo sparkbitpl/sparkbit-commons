@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,23 +18,26 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.STACK_TRACE;
+
 @RequiredArgsConstructor
 @Slf4j
 @SuppressWarnings("unused")
 public class RestErrorAttributes extends DefaultErrorAttributes {
 
     private static final Set<Class<?>> NOT_LOGGABLE_EXCEPTIONS = ImmutableSet.of(
-            TypeMismatchException.class,
-            MethodArgumentNotValidException.class,
-            AccessDeniedException.class);
+        TypeMismatchException.class,
+        MethodArgumentNotValidException.class,
+        AccessDeniedException.class);
 
     private final ObjectProvider<Messages> messagesOpt;
 
     @Override
-    public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
+    public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions opts) {
         String contentType = webRequest.getHeader("content-type");
         if (contentType != null && MediaType.valueOf(contentType).isCompatibleWith(MediaType.APPLICATION_JSON)) {
-            Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, false);
+            @SuppressWarnings("deprecation")
+            Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, opts.isIncluded(STACK_TRACE));
             removeUnwantedAttributes(errorAttributes);
             changeTimestampToMillis(errorAttributes);
             Throwable throwable = getError(webRequest);
@@ -56,7 +60,7 @@ public class RestErrorAttributes extends DefaultErrorAttributes {
             }
             return errorAttributes;
         } else {
-            return super.getErrorAttributes(webRequest, includeStackTrace);
+            return super.getErrorAttributes(webRequest, opts);
         }
     }
 
