@@ -5,12 +5,10 @@
 
     <groupId>pl.sparkbit</groupId>
     <artifactId>sparkbit-commons</artifactId>
-    <version>2.0.25-SNAPSHOT</version>
+    <version>2.0.26-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>A library that provides various common functionalities for typical REST API applications created using
-        Spring Boot
-    </description>
+    <description>A library that provides various common functionalities for typical REST API applications created using Spring Boot</description>
     <url>https://www.sparkbit.pl</url>
 
     <parent>
