@@ -9,7 +9,7 @@ export projectName=sparkbit-commons
 cd $repoRoot
 
 scripts/bump_version.sh
-mvn -s "${NEXUS_SETTINGS_XML}" -P release install deploy
+mvn -s "${NEXUS_SETTINGS_XML}" -P release -DskipTests -Dcheckstyle.skip -maven.antrun.skip deploy
 
 git commit -a -m "RELEASE: release $projectName-$RELEASE_VERSION"
 git tag -am "$projectName-$RELEASE_VERSION" $projectName-$RELEASE_VERSION
