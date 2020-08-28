@@ -1,4 +1,4 @@
-package pl.sparkbit.commons.test.mysql;
+package pl.sparkbit.commons.test.db;
 
 import com.ninja_squad.dbsetup.DbSetup;
 import com.ninja_squad.dbsetup.operation.Operation;

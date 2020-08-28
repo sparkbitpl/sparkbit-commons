@@ -1,4 +1,4 @@
-package pl.sparkbit.commons.test.mysql;
+package pl.sparkbit.commons.test.db;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -19,16 +19,13 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 
 @SuppressWarnings("unused")
-public class MapperTestConfigBase {
+public abstract class MapperTestConfigBase {
 
-    private static final String TEST_DB_PREFIX = "mapper-test.db.";
+    protected static final String TEST_DB_PREFIX = "mapper-test.db.";
 
     private static final String TEST_DB_HANDLER_PACKAGES = TEST_DB_PREFIX + "handler-packages";
     private static final String TEST_DB_SCHEMA_FILES = TEST_DB_PREFIX + "schema-files";
     private static final String TEST_DB_TYPE_ALIASES_PACKAGE = TEST_DB_PREFIX + "type-aliases-package";
-    private static final String TEST_DB_MYSQL_VERSION = TEST_DB_PREFIX + "mysql.version";
-    private static final String TEST_DB_MYSQL_CONFIG_DIR = TEST_DB_PREFIX + "mysql.config-dir";
-
 
     @Value("classpath*:mybatis/*-mapper.xml")
     private Resource[] mappers;
@@ -42,21 +39,12 @@ public class MapperTestConfigBase {
     @Value("${" + TEST_DB_TYPE_ALIASES_PACKAGE + ":}")
     private String typeAliasesPackage;
 
-    @Value("${" + TEST_DB_MYSQL_VERSION + ":5.7}")
-    private String mysqlVersion;
-
-    @Value("${" + TEST_DB_MYSQL_CONFIG_DIR + ":#{null}}")
-    private String mysqlConfigDir;
-
     @Bean
     public DataSource dataSourceSpied() {
         HikariConfig config = new HikariConfig();
         config.setDriverClassName("org.testcontainers.jdbc.ContainerDatabaseDriver");
-        String jdbcUrl = "jdbc:tc:mysql:" + mysqlVersion + "://localhost/dbname?TC_TMPFS=/var/lib/mysql:rw";
-        if (mysqlConfigDir != null) {
-            jdbcUrl += "&TC_MY_CNF=" + mysqlConfigDir;
-        }
         config.setMaximumPoolSize(1);
+        String jdbcUrl = getJdbcURL();
         config.setJdbcUrl(jdbcUrl);
 
         return new HikariDataSource(config);
@@ -97,4 +85,6 @@ public class MapperTestConfigBase {
     public PlatformTransactionManager txManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
+
+    protected abstract String getJdbcURL();
 }
