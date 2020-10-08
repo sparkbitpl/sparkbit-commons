@@ -160,21 +160,26 @@ public class RestLoggingFilter extends OncePerRequestFilter {
         logBuilder.append(prompt).append(protocol).append(' ').append(response.getStatus()).append(' ').
                 append(HttpStatus.valueOf(response.getStatus()).name()).append('\n');
         Collection<String> headerNames = response.getHeaderNames();
-        for (String headerName : headerNames) {
-            logBuilder.append(prompt).append(headerName).append(" : ");
+        for (String headerName : headerNames.stream().distinct().collect(toList())) {
+            Collection<String> headerValues = response.getHeaders(headerName);
             if ("set-cookie".equalsIgnoreCase(headerName)) {
-                String headerValue = response.getHeader(headerName);
-                List<HttpCookie> cookies = HttpCookie.parse(response.getHeader(headerName));
-                List<String> valuesToMask = cookies.stream()
-                        .filter(cookie -> cookiesToMask.contains(cookie.getName()))
-                        .map(HttpCookie::getValue)
-                        .collect(toList());
-                for (String value : valuesToMask) {
-                    headerValue = headerValue.replaceAll(value, "********");
+                for (String headerValue : headerValues) {
+                    logBuilder.append(prompt).append(headerName).append(" : ");
+                    List<HttpCookie> cookies = HttpCookie.parse(headerValue);
+                    List<String> valuesToMask = cookies.stream()
+                            .filter(cookie -> cookiesToMask.contains(cookie.getName()))
+                            .map(HttpCookie::getValue)
+                            .collect(toList());
+                    String maskedHeaderValue = headerValue;
+                    for (String value : valuesToMask) {
+                        maskedHeaderValue = headerValue.replaceAll(value, "********");
+                    }
+                    logBuilder.append(maskedHeaderValue).append('\n');
                 }
-                logBuilder.append(headerValue).append('\n');
             } else {
-                logBuilder.append(response.getHeader(headerName)).append('\n');
+                for (String headerValue : headerValues) {
+                    logBuilder.append(prompt).append(headerName).append(" : ").append(headerValue).append('\n');
+                }
             }
         }
         return logBuilder.deleteCharAt(logBuilder.length() - 1).toString();
