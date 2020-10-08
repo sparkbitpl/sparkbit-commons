@@ -18,7 +18,7 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.Set;
 
-import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.STACK_TRACE;
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include.MESSAGE;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,10 +34,9 @@ public class RestErrorAttributes extends DefaultErrorAttributes {
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions opts) {
-        String contentType = webRequest.getHeader("content-type");
-        if (contentType != null && MediaType.valueOf(contentType).isCompatibleWith(MediaType.APPLICATION_JSON)) {
-            @SuppressWarnings("deprecation")
-            Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, opts.isIncluded(STACK_TRACE));
+        String accept = webRequest.getHeader("accept");
+        if (accept == null || MediaType.valueOf(accept).isCompatibleWith(MediaType.APPLICATION_JSON)) {
+            Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, opts.including(MESSAGE));
             removeUnwantedAttributes(errorAttributes);
             changeTimestampToMillis(errorAttributes);
             Throwable throwable = getError(webRequest);
