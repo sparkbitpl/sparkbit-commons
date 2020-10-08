@@ -20,8 +20,7 @@ public class RestLoggingFilterAutoConfiguration {
     private static final int RIGHT_AFTER_HIGHEST_PRECEDENCE = HIGHEST_PRECEDENCE + 1;
 
     @Bean
-    public FilterRegistrationBean<RestLoggingFilter> requestLoggingFilterRegistration(
-        RestLoggingFilter filter) {
+    public FilterRegistrationBean<RestLoggingFilter> requestLoggingFilterRegistration(RestLoggingFilter filter) {
 
         FilterRegistrationBean<RestLoggingFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(filter);
@@ -33,6 +32,7 @@ public class RestLoggingFilterAutoConfiguration {
 
     @Bean
     public RestLoggingFilter requestLoggingFilter(RestLoggerProperties properties) {
-        return new RestLoggingFilter(properties.getExcludeUrlPatterns());
+        return new RestLoggingFilter(properties.getExcludeUrlPatterns(), properties.getHttpHeadersToMask(),
+                properties.getCookiesToMask());
     }
 }

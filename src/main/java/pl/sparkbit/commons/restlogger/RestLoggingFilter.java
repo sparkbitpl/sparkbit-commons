@@ -10,14 +10,18 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.HttpCookie;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static java.util.stream.Collectors.toList;
 import static javax.servlet.DispatcherType.ERROR;
 import static javax.servlet.DispatcherType.REQUEST;
 
@@ -31,6 +35,8 @@ public class RestLoggingFilter extends OncePerRequestFilter {
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private final List<String> excludeUrlPatterns;
+    private final List<String> httpHeadersToMask;
+    private final List<String> cookiesToMask;
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -127,8 +133,23 @@ public class RestLoggingFilter extends OncePerRequestFilter {
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
-            logBuilder.append(prompt).append(headerName).append(" : ").
-                    append(request.getHeader(headerName)).append('\n');
+            logBuilder.append(prompt).append(headerName).append(" : ");
+            if ("cookie".equalsIgnoreCase(headerName)) {
+                String headerValue = request.getHeader(headerName);
+                Cookie[] cookies = request.getCookies();
+                List<String> valuesToMask = Arrays.stream(cookies)
+                        .filter(cookie -> cookiesToMask.contains(cookie.getName()))
+                        .map(Cookie::getValue)
+                        .collect(toList());
+                for (String value : valuesToMask) {
+                    headerValue = headerValue.replaceAll(value, "********");
+                }
+                logBuilder.append(headerValue).append('\n');
+            } else if (httpHeadersToMask.contains(headerName)) {
+                logBuilder.append("**********").append('\n');
+            } else {
+                logBuilder.append(request.getHeader(headerName)).append('\n');
+            }
         }
         return logBuilder.deleteCharAt(logBuilder.length() - 1).toString();
     }
@@ -140,8 +161,21 @@ public class RestLoggingFilter extends OncePerRequestFilter {
                 append(HttpStatus.valueOf(response.getStatus()).name()).append('\n');
         Collection<String> headerNames = response.getHeaderNames();
         for (String headerName : headerNames) {
-            logBuilder.append(prompt).append(headerName).append(" : ").append(response.getHeader(headerName)).
-                    append('\n');
+            logBuilder.append(prompt).append(headerName).append(" : ");
+            if ("set-cookie".equalsIgnoreCase(headerName)) {
+                String headerValue = response.getHeader(headerName);
+                List<HttpCookie> cookies = HttpCookie.parse(response.getHeader(headerName));
+                List<String> valuesToMask = cookies.stream()
+                        .filter(cookie -> cookiesToMask.contains(cookie.getName()))
+                        .map(HttpCookie::getValue)
+                        .collect(toList());
+                for (String value : valuesToMask) {
+                    headerValue = headerValue.replaceAll(value, "********");
+                }
+                logBuilder.append(headerValue).append('\n');
+            } else {
+                logBuilder.append(response.getHeader(headerName)).append('\n');
+            }
         }
         return logBuilder.deleteCharAt(logBuilder.length() - 1).toString();
     }

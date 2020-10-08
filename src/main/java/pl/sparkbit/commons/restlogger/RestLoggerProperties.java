@@ -15,4 +15,8 @@ public class RestLoggerProperties {
     static final String REST_LOGGER_ENABLED = REST_LOGGER_PROPERTIES_PREFIX + ".enabled";
 
     private List<String> excludeUrlPatterns = new ArrayList<>();
+
+    private List<String> httpHeadersToMask = new ArrayList<>();
+
+    private List<String> cookiesToMask = new ArrayList<>();
 }
