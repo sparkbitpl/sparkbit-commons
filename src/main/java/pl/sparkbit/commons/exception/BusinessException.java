@@ -45,7 +45,7 @@ public class BusinessException extends RuntimeException {
      * <p>
      * The returned map will be available under "errorDetails" path.
      */
-    Map<String, Object> getAdditionalErrorDetails() {
+    protected Map<String, Object> getAdditionalErrorDetails() {
         return null;
     }
 }
