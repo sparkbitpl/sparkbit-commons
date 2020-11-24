@@ -1,6 +1,5 @@
 package pl.sparkbit.commons.exception;
 
-import lombok.Getter;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Arrays;
@@ -14,7 +13,6 @@ public class BusinessException extends RuntimeException {
 
     private static final String DEFAULT_ERROR_CODE = "BUSINESS_RULES_VIOLATED";
 
-    @Getter
     private final String errorCode;
     private final String[] messageDetails;
 
@@ -37,7 +35,11 @@ public class BusinessException extends RuntimeException {
     }
 
     public String[] getMessageDetails() {
-        return messageDetails != null ? Arrays.copyOf(messageDetails, messageDetails.length) : new String[] {};
+        return messageDetails != null ? Arrays.copyOf(messageDetails, messageDetails.length) : new String[]{};
+    }
+
+    public String getErrorCode() {
+        return errorCode;
     }
 
     /**
