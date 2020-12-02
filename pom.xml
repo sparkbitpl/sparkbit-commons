@@ -102,6 +102,10 @@
                             <serverId>ossrh</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <!-- Sometimes Sonatype servers are very busy and operations take a very long time.
+                             Default timeout of 5 minutes is not enough -->
+                            <stagingProgressTimeoutMinutes>30</stagingProgressTimeoutMinutes>
+                            <stagingProgressPauseDurationSeconds>10</stagingProgressPauseDurationSeconds>
                         </configuration>
                     </plugin>
                 </plugins>
