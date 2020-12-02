@@ -1,6 +1,7 @@
 package pl.sparkbit.commons.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
@@ -29,6 +30,7 @@ import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 import pl.sparkbit.commons.i18n.Messages;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -134,7 +136,7 @@ public class RestErrorAttributesTest {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(this, "test");
         errors.addError(new FieldError("object1", "field1", "size should be equal 2"));
         errors.addError(new FieldError("object1", "field2", "other field error"));
-        errors.addError(new ObjectError("object1", "other field error"));
+        errors.addError(new ObjectError("object1", "object error"));
         MethodArgumentNotValidException ex = new MethodArgumentNotValidException(
             new MethodParameter(this.getClass().getDeclaredMethods()[0], -1),
             errors
@@ -148,7 +150,9 @@ public class RestErrorAttributesTest {
         assertThat(modelAndView).isNull();
         assertThat(attributes.get("message")).isEqualTo("Validation errors:\n" +
             "- size should be equal 2\n" +
-            "- other field error");
+            "- other field error\n" +
+            "- object error"
+        );
         assertThat(attributes.get("fieldErrors")).isEqualTo(ImmutableList.of(ImmutableMap.of(
             "msg", "size should be equal 2",
             "path", "field1"
@@ -156,6 +160,25 @@ public class RestErrorAttributesTest {
             "msg", "other field error",
             "path", "field2"
         )));
+        assertThat(attributes).containsOnlyKeys("timestamp", "status", "message", "fieldErrors");
+    }
+
+    @Test
+    public void handlingEmptyValidationErrors() {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(this, "test");
+        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(
+            new MethodParameter(this.getClass().getDeclaredMethods()[0], -1),
+            errors
+        );
+        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, null, null, ex);
+
+        Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
+            ErrorAttributeOptions.defaults());
+
+        assertThat(this.errorAttributes.getError(this.webRequest)).isSameAs(ex);
+        assertThat(modelAndView).isNull();
+        assertThat(attributes.get("message")).isEqualTo("Validation failed");
+        assertThat(attributes.get("fieldErrors")).isEqualTo(Collections.emptyList());
         assertThat(attributes).containsOnlyKeys("timestamp", "status", "message", "fieldErrors");
     }
 
@@ -284,6 +307,31 @@ public class RestErrorAttributesTest {
         Map<String, Object> attributes = runMessageNotReadable(cause);
 
         assertThat(attributes.get("message")).isEqualTo("JSON payload is not well formatted");
+        assertThat(attributes).containsOnlyKeys("timestamp", "status", "message");
+    }
+
+    @Test
+    public void handlingNonReadableJsonMessageCausedByJsonMappingException() {
+        JsonMappingException cause = new JsonMappingException(null, "value out of range");
+        cause.prependPath("object1", "field2");
+
+        Map<String, Object> attributes = runMessageNotReadable(cause);
+
+        assertThat(attributes.get("message")).isEqualTo("Invalid value in field \"field2\"");
+        assertThat(attributes.get("fieldErrors")).isEqualTo(ImmutableList.of(ImmutableMap.of(
+            "msg", "invalid",
+            "path", "field2"
+        )));
+        assertThat(attributes).containsOnlyKeys("timestamp", "status", "message", "fieldErrors");
+    }
+
+    @Test
+    public void handlingNonReadableJsonMessageCausedByJsonMappingExceptionWithoutPath() {
+        JsonMappingException cause = new JsonMappingException(null, "value out of range");
+
+        Map<String, Object> attributes = runMessageNotReadable(cause);
+
+        assertThat(attributes.get("message")).isEqualTo("Unknown error");
         assertThat(attributes).containsOnlyKeys("timestamp", "status", "message");
     }
 

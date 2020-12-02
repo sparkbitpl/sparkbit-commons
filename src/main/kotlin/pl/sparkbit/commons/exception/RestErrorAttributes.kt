@@ -67,8 +67,13 @@ class RestErrorAttributes(
                 throwable.message
             }
             is MethodArgumentNotValidException -> {
-                throwable.bindingResult.fieldErrors.mapNotNull { it.defaultMessage }
-                    .joinToString(separator = "\n- ", prefix = "Validation errors:\n- ")
+                throwable.bindingResult.allErrors.mapNotNull { it.defaultMessage }.let {
+                    if (it.isNotEmpty()) {
+                        it.joinToString(separator = "\n- ", prefix = "Validation errors:\n- ")
+                    } else {
+                        "Validation failed"
+                    }
+                }
             }
             is HttpMessageNotReadableException -> {
                 when (val cause = throwable.cause) {
@@ -93,6 +98,13 @@ class RestErrorAttributes(
                     }
                     is JsonParseException -> {
                         "JSON payload is not well formatted"
+                    }
+                    is JsonMappingException -> {
+                        if (cause.path.isEmpty()) {
+                            null
+                        } else {
+                            "Invalid value in field \"${cause.path.asStr()}\""
+                        }
                     }
                     else -> null
                 }
@@ -127,7 +139,7 @@ class RestErrorAttributes(
                             attrs[FIELD_ERRORS] = listOf(mapOf(FIELD_PATH to cause.path.asStr(), FIELD_ERROR_MSG to "unrecognized property"))
                         }
                     }
-                    is MismatchedInputException -> {
+                    is JsonMappingException -> {
                         if (cause.path.isNotEmpty()) {
                             attrs[FIELD_ERRORS] = listOf(mapOf(FIELD_PATH to cause.path.asStr(), FIELD_ERROR_MSG to "invalid"))
                         }
