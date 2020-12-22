@@ -47,12 +47,7 @@ public abstract class MapperTestConfigBase {
         String jdbcUrl = getJdbcURL();
         config.setJdbcUrl(jdbcUrl);
 
-        return new HikariDataSource(config);
-    }
-
-    @Bean
-    public DataSource dataSource(DataSource dataSourceSpied) {
-        return new DataSourceSpy(dataSourceSpied);
+        return new DataSourceSpy(new HikariDataSource(config));
     }
 
     @Bean
