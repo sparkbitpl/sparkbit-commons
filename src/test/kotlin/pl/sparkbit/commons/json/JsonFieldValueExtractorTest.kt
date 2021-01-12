@@ -20,12 +20,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.bind.MethodArgumentNotValidException
 import pl.sparkbit.commons.jackson.JsonFieldDeserializer
-import spock.lang.Subject
+
 
 class JsonFieldValueExtractorTest {
     private val service = Mockito.mock(JsonFieldService::class.java)
 
-    @Subject
     private val api = JsonFieldTestController(service)
     private val mvc = MockMvcBuilders.standaloneSetup(api)
         .setMessageConverters(jacksonConverter(
