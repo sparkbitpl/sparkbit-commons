@@ -1,14 +1,31 @@
 package pl.sparkbit.commons.exception;
 
+import ch.qos.logback.core.Appender;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.*;
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import lombok.val;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.core.MethodParameter;
@@ -25,16 +42,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import pl.sparkbit.commons.i18n.Messages;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class RestErrorAttributesTest {
 
-    private Messages messages = Mockito.mock(Messages.class);
-    private ObjectProvider<Messages> messagesObjectProvider = Mockito.mock(ObjectProvider.class);
+    private Messages messages = mock(Messages.class);
+    private ObjectProvider<Messages> messagesObjectProvider = mock(ObjectProvider.class);
     private RestErrorAttributes errorAttributes = new RestErrorAttributes(messagesObjectProvider);
 
     private final MockHttpServletRequest request = new MockHttpServletRequest();
@@ -43,7 +54,7 @@ public class RestErrorAttributesTest {
     @Before
     public void init() {
         Mockito.when(messagesObjectProvider.getIfAvailable()).thenReturn(messages);
-        Mockito.doCallRealMethod().when(messagesObjectProvider).ifAvailable(Mockito.any());
+        Mockito.doCallRealMethod().when(messagesObjectProvider).ifAvailable(any());
     }
 
     @Test
@@ -350,6 +361,40 @@ public class RestErrorAttributesTest {
         )));
         assertThat(attributes).containsOnlyKeys("timestamp", "status", "message", "fieldErrors");
     }
+
+    @Test
+    public void clientErrorsAreNotLogged() {
+        // given
+        val mockedAppender = mock(Appender.class);
+        val logger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(RestErrorAttributes.class);
+        logger.addAppender(mockedAppender);
+        this.request.setAttribute("javax.servlet.error.status_code", 404);
+
+        // when
+        this.errorAttributes.getErrorAttributes(this.webRequest,
+                ErrorAttributeOptions.defaults());
+
+        // then
+        verify(mockedAppender, never()).doAppend(any());
+    }
+
+    @Test
+    public void serverErrorsAreLogged() {
+        // given
+        val mockedAppender = mock(Appender.class);
+        val logger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(RestErrorAttributes.class);
+        logger.addAppender(mockedAppender);
+        this.request.setAttribute("javax.servlet.error.status_code", 500);
+
+        // when
+        Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
+                ErrorAttributeOptions.defaults());
+
+        // then
+        val argCapture = ArgumentCaptor.forClass(Appender.class);
+        verify(mockedAppender, times(1)).doAppend(any());
+    }
+
 
     private Map<String, Object> runMessageNotReadable(Exception cause) {
         HttpInputMessage body = new MockHttpInputMessage("{\"field1\": \"val1\"}".getBytes());

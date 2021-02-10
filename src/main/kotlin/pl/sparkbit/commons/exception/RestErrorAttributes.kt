@@ -41,17 +41,23 @@ class RestErrorAttributes(
             addStatus(errorAttributes, status)
             addMessagesWithDetails(errorAttributes, throwable)
             addFieldErrors(errorAttributes, throwable)
-            if (throwable == null && status in 500..599) {
-                val message = getAttribute<Any>(webRequest, RequestDispatcher.ERROR_MESSAGE)
-                log.error { "Runtime exception: $message" }
-            } else if (NOT_LOGGABLE_EXCEPTIONS.stream().noneMatch { it.isInstance(throwable) }) {
-                log.error("Runtime exception", throwable)
+            when {
+                status in 500..599 -> {
+                    val message = getAttribute<Any>(webRequest, RequestDispatcher.ERROR_MESSAGE)
+                    log.error { "Runtime exception: $message" }
+                }
+                status !in 400..499 && isLoggableException(throwable) -> {
+                    log.error("Runtime exception", throwable)
+                }
             }
             errorAttributes
         } else {
             super.getErrorAttributes(webRequest, opts)
         }
     }
+
+    private fun isLoggableException(throwable: Throwable?) =
+        throwable != null && NOT_LOGGABLE_EXCEPTIONS.stream().noneMatch { it.isInstance(throwable) }
 
     private fun addMessagesWithDetails(errorAttributes: MutableMap<String, Any?>, throwable: Throwable?) {
         val message: String? = when (throwable) {
