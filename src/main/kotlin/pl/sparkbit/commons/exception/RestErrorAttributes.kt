@@ -17,6 +17,7 @@ import org.springframework.core.annotation.Order
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.web.firewall.RequestRejectedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.WebRequest
@@ -42,6 +43,12 @@ class RestErrorAttributes(
             addMessagesWithDetails(errorAttributes, throwable)
             addFieldErrors(errorAttributes, throwable)
             when {
+                throwable is RequestRejectedException -> {
+                    // Ignore RequestRejectedException. It's workaround for Spring Security issue
+                    // RequestRejectedException should be recognized as 4xx client error
+                    // but currently the status is unspecified
+                    // https://github.com/spring-projects/spring-security/issues/7568
+                }
                 status in 500..599 -> {
                     val message = getAttribute<Any>(webRequest, RequestDispatcher.ERROR_MESSAGE)
                     log.error { "Runtime exception: $message" }
@@ -57,7 +64,9 @@ class RestErrorAttributes(
     }
 
     private fun isLoggableException(throwable: Throwable?) =
-        throwable != null && NOT_LOGGABLE_EXCEPTIONS.stream().noneMatch { it.isInstance(throwable) }
+        throwable?.let { instance ->
+            NOT_LOGGABLE_EXCEPTIONS.none { it.isInstance(instance) }
+        } ?: true
 
     private fun addMessagesWithDetails(errorAttributes: MutableMap<String, Any?>, throwable: Throwable?) {
         val message: String? = when (throwable) {
@@ -114,6 +123,9 @@ class RestErrorAttributes(
                     }
                     else -> null
                 }
+            }
+            is RequestRejectedException -> {
+                "The request was rejected because requests contains malicious URL, parameters or payload"
             }
             else -> null
         }

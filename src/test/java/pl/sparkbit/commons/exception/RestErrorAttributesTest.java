@@ -33,6 +33,7 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -188,6 +189,7 @@ public class RestErrorAttributesTest {
         assertThat(attributes.get("fieldErrors")).isEqualTo(Collections.emptyList());
         assertThat(attributes).containsOnlyKeys("timestamp", "status", "message", "fieldErrors");
     }
+
 
     @Test
     public void handlingNonReadableJsonMessageCausedByInvalidFormatWithPath() {
@@ -391,8 +393,23 @@ public class RestErrorAttributesTest {
                 ErrorAttributeOptions.defaults());
 
         // then
-        val argCapture = ArgumentCaptor.forClass(Appender.class);
         verify(mockedAppender, times(1)).doAppend(any());
+    }
+
+    @Test
+    public void requestRejectedExceptionShoudntBeLogged() {
+        // given
+        val mockedAppender = mock(Appender.class);
+        val logger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(RestErrorAttributes.class);
+        logger.addAppender(mockedAppender);
+        RequestRejectedException ex = new RequestRejectedException("Incorrect URL");
+        this.request.setAttribute("javax.servlet.error.exception", ex);
+
+        // when
+        this.errorAttributes.getErrorAttributes(this.webRequest, ErrorAttributeOptions.defaults());
+
+        // then
+        verify(mockedAppender, never()).doAppend(any());
     }
 
 
