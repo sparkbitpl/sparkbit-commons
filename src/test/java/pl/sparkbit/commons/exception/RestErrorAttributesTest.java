@@ -10,21 +10,11 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
 import lombok.val;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.Offset;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -38,10 +28,23 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.ModelAndView;
 import pl.sparkbit.commons.i18n.Messages;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class RestErrorAttributesTest {
 
@@ -368,13 +371,13 @@ public class RestErrorAttributesTest {
     public void clientErrorsAreNotLogged() {
         // given
         val mockedAppender = mock(Appender.class);
-        val logger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(RestErrorAttributes.class);
+        val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
         this.request.setAttribute("javax.servlet.error.status_code", 404);
 
         // when
         this.errorAttributes.getErrorAttributes(this.webRequest,
-                ErrorAttributeOptions.defaults());
+            ErrorAttributeOptions.defaults());
 
         // then
         verify(mockedAppender, never()).doAppend(any());
@@ -384,13 +387,13 @@ public class RestErrorAttributesTest {
     public void serverErrorsAreLogged() {
         // given
         val mockedAppender = mock(Appender.class);
-        val logger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(RestErrorAttributes.class);
+        val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
         this.request.setAttribute("javax.servlet.error.status_code", 500);
 
         // when
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
-                ErrorAttributeOptions.defaults());
+            ErrorAttributeOptions.defaults());
 
         // then
         verify(mockedAppender, times(1)).doAppend(any());
@@ -400,7 +403,7 @@ public class RestErrorAttributesTest {
     public void requestRejectedExceptionShoudntBeLogged() {
         // given
         val mockedAppender = mock(Appender.class);
-        val logger = (ch.qos.logback.classic.Logger)LoggerFactory.getLogger(RestErrorAttributes.class);
+        val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
         RequestRejectedException ex = new RequestRejectedException("Incorrect URL");
         this.request.setAttribute("javax.servlet.error.exception", ex);
@@ -412,6 +415,33 @@ public class RestErrorAttributesTest {
         verify(mockedAppender, never()).doAppend(any());
     }
 
+    @Test
+    public void handlingMissingServletRequestParameterException() {
+        MissingServletRequestParameterException ex = new MissingServletRequestParameterException(
+            "filename", "string"
+        );
+        this.errorAttributes.resolveException(this.request, null, null, ex);
+        this.request.setAttribute("javax.servlet.error.exception", ex);
+        Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
+            ErrorAttributeOptions.defaults());
+
+        assertThat(attributes.get("message")).isEqualTo("Missing request parameter: filename");
+        assertThat(attributes).containsOnlyKeys("timestamp", "status", "message");
+    }
+
+    @Test
+    public void handlingMissingServletRequestPartException() {
+        MissingServletRequestPartException ex = new MissingServletRequestPartException(
+            "file"
+        );
+        this.errorAttributes.resolveException(this.request, null, null, ex);
+        this.request.setAttribute("javax.servlet.error.exception", ex);
+        Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
+            ErrorAttributeOptions.defaults());
+
+        assertThat(attributes.get("message")).isEqualTo("Missing request part: file");
+        assertThat(attributes).containsOnlyKeys("timestamp", "status", "message");
+    }
 
     private Map<String, Object> runMessageNotReadable(Exception cause) {
         HttpInputMessage body = new MockHttpInputMessage("{\"field1\": \"val1\"}".getBytes());

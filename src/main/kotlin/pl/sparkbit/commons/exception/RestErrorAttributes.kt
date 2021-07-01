@@ -19,8 +19,10 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.firewall.RequestRejectedException
 import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.multipart.support.MissingServletRequestPartException
 import pl.sparkbit.commons.i18n.Messages
 import java.time.Instant
 import javax.servlet.RequestDispatcher
@@ -123,6 +125,12 @@ class RestErrorAttributes(
                     }
                     else -> null
                 }
+            }
+            is MissingServletRequestParameterException -> {
+                "Missing request parameter: ${throwable.parameterName}"
+            }
+            is MissingServletRequestPartException -> {
+                "Missing request part: ${throwable.requestPartName}"
             }
             is RequestRejectedException -> {
                 "The request was rejected because requests contains malicious URL, parameters or payload"
