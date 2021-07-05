@@ -22,6 +22,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.WebRequest
+import org.springframework.web.multipart.MaxUploadSizeExceededException
+import org.springframework.web.multipart.MultipartException
 import org.springframework.web.multipart.support.MissingServletRequestPartException
 import pl.sparkbit.commons.i18n.Messages
 import java.time.Instant
@@ -134,6 +136,12 @@ class RestErrorAttributes(
             }
             is RequestRejectedException -> {
                 "The request was rejected because requests contains malicious URL, parameters or payload"
+            }
+            is MaxUploadSizeExceededException -> {
+                "Upload exceeds the maximum upload size allowed"
+            }
+            is MultipartException -> {
+                "Invalid multipart request"
             }
             else -> null
         }

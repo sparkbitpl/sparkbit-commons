@@ -20,4 +20,10 @@ open class RestErrorAutoConfiguration {
     open fun restErrorAttributes(messages: ObjectProvider<Messages>): RestErrorAttributes {
         return RestErrorAttributes(messages)
     }
+
+    @Bean
+    @ConditionalOnMissingBean(RestErrorStatusCodeResolver::class)
+    open fun restErrorStatusCodeResolver(): RestErrorStatusCodeResolver {
+        return RestErrorStatusCodeResolver()
+    }
 }
