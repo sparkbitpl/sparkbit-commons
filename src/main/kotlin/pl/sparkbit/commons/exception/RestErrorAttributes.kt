@@ -37,8 +37,7 @@ class RestErrorAttributes(
     private val log = KotlinLogging.logger {}
 
     override fun getErrorAttributes(webRequest: WebRequest, opts: ErrorAttributeOptions): Map<String, Any?> {
-        val accept = webRequest.getHeader("accept")
-        return if (accept == null || MediaType.valueOf(accept).isCompatibleWith(MediaType.APPLICATION_JSON)) {
+        return if (isRequestAcceptJsonOrAll(webRequest)) {
             val errorAttributes = mutableMapOf<String, Any?>()
             val status = getAttribute<Int>(webRequest, RequestDispatcher.ERROR_STATUS_CODE) ?: 999
             val throwable: Throwable? = getError(webRequest)
@@ -65,6 +64,16 @@ class RestErrorAttributes(
         } else {
             super.getErrorAttributes(webRequest, opts)
         }
+    }
+
+    private fun isRequestAcceptJsonOrAll(webRequest: WebRequest): Boolean {
+        val accept = webRequest.getHeader("accept")
+        if (accept == null || accept.isBlank()) {
+            return true
+        }
+        return accept.split(",")
+            .map { MediaType.valueOf(it.trim()) }
+            .any { it.isCompatibleWith(MediaType.APPLICATION_JSON) }
     }
 
     private fun isLoggableException(throwable: Throwable?) =

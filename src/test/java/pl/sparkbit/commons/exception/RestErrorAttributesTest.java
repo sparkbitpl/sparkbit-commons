@@ -443,6 +443,16 @@ public class RestErrorAttributesTest {
         assertThat(attributes).containsOnlyKeys("timestamp", "status", "message");
     }
 
+    @Test
+    public void parseAcceptWithMultipleMineTypes() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, image/png, */*");
+        WebRequest webRequest = new ServletWebRequest(request);
+        RestErrorAttributes errorAttributes = new RestErrorAttributes(messagesObjectProvider);
+        Map<String, Object> attributes = errorAttributes.getErrorAttributes(this.webRequest, ErrorAttributeOptions.defaults());
+        assertThat(attributes).isNotNull();
+    }
+
     private Map<String, Object> runMessageNotReadable(Exception cause) {
         HttpInputMessage body = new MockHttpInputMessage("{\"field1\": \"val1\"}".getBytes());
         HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Invalid Json", cause, body);
