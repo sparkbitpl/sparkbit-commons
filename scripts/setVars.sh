@@ -10,7 +10,7 @@ fi
 if [ -z ${currentVersion+x} ] || [ "$currentVersion" = "" ]; then
     oldPwd=`pwd`
     cd $repoRoot
-    currentVersion=`printf 'VERSION=${project.version}\n0\n' | mvn help:evaluate | grep '^VERSION' | sed 's/VERSION=//'`
+    currentVersion=`printf 'VERSION=${project.version}\n0\n' | $MVN help:evaluate | grep '^VERSION' | sed 's/VERSION=//'`
     cd $oldPwd
 fi
 

@@ -38,6 +38,7 @@ class EcsMetadataInfoContributor(
                     ecsDetails["started_at"] = metadata.getOrDefault("StartedAt", "")
                     ecsDetails["type"] = metadata.getOrDefault("Type", "")
 
+                    @Suppress("UNCHECKED_CAST")
                     val labels = metadata["Labels"] as Map<String, Any>
                     ecsDetails["cluster"] = labels.getOrDefault("com.amazonaws.ecs.cluster", "")
                     ecsDetails["container-name"] = labels.getOrDefault("com.amazonaws.ecs.container-name", "")

@@ -20,7 +20,7 @@ public class DurationFromMillisDeserializer extends StdScalarDeserializer<Durati
     @Override
     public Duration deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
             throws IOException {
-        int currentToken = jsonParser.getCurrentTokenId();
+        int currentToken = jsonParser.currentTokenId();
         if (currentToken != ID_NUMBER_INT) {
             deserializationContext.reportWrongTokenException(Duration.class, VALUE_NUMBER_INT, "expected integer");
         }

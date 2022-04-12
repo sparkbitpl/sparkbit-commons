@@ -7,7 +7,7 @@ if [[ $currentVersion == *SNAPSHOT ]]; then
     echo SNAPSHOT version detected
     echo Bumping version to ${RELEASE_VERSION}
     cd $repoRoot
-    mvn versions:set -DnewVersion=${RELEASE_VERSION} versions:commit
+    $MVN versions:set -DnewVersion=${RELEASE_VERSION} versions:commit
 else
     echo Release version detected
     #Remove build number from next snapshot version
@@ -16,5 +16,5 @@ else
     nextVersion=`echo $version | sed -r "s/(.*[^0-9]+)[0-9]+([^0-9]*)\$/\1$((numberToIncrease + 1))\2-SNAPSHOT/g"`
     echo Bumping version to ${nextVersion}
     cd $repoRoot
-    mvn versions:set -DnewVersion=${nextVersion} versions:commit
+    $MVN versions:set -DnewVersion=${nextVersion} versions:commit
 fi
