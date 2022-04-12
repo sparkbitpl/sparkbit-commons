@@ -137,7 +137,12 @@
                                 <requireReleaseDeps>
                                     <message>No Snapshots Dependencies Allowed!</message>
                                 </requireReleaseDeps>
-                                <requireUpperBoundDeps/>
+                                <requireUpperBoundDeps>
+                                    <excludes>
+                                        <!-- HikariCP depends on 2.0.0-alpha1 which we don't want-->
+                                        <exclude>org.slf4j:slf4j-api</exclude>
+                                    </excludes>
+                                </requireUpperBoundDeps>
                             </rules>
                         </configuration>
                     </execution>
@@ -439,11 +444,6 @@
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>6.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.0-alpha7</version>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
