@@ -50,7 +50,8 @@ public class RestErrorAttributesTest {
 
     private Messages messages = mock(Messages.class);
     private ObjectProvider<Messages> messagesObjectProvider = mock(ObjectProvider.class);
-    private RestErrorAttributes errorAttributes = new RestErrorAttributes(messagesObjectProvider);
+    private RestErrorAttributes errorAttributes =
+            new RestErrorAttributes(messagesObjectProvider, new RestErrorProperties());
 
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private final WebRequest webRequest = new ServletWebRequest(this.request);
@@ -448,7 +449,8 @@ public class RestErrorAttributesTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, image/png, */*");
         WebRequest webRequest = new ServletWebRequest(request);
-        RestErrorAttributes errorAttributes = new RestErrorAttributes(messagesObjectProvider);
+        RestErrorAttributes errorAttributes =
+                new RestErrorAttributes(messagesObjectProvider, new RestErrorProperties());
         Map<String, Object> attributes = errorAttributes.getErrorAttributes(this.webRequest, ErrorAttributeOptions.defaults());
         assertThat(attributes).isNotNull();
     }

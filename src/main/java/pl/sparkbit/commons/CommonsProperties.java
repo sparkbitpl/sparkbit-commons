@@ -18,4 +18,5 @@ public abstract class CommonsProperties {
     public static final String ECS_METADATA_INFO_CONTRIBUTOR_ENABLED =
             PREFIX + ".ecs-metadata-info-contributor-enabled";
     public static final String RUNTIME_INFO_CONTRIBUTOR_ENABLED = PREFIX + ".runtime-info-contributor-enabled";
+    public static final String REST_ERROR = PREFIX + ".rest-error";
 }

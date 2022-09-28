@@ -31,7 +31,8 @@ import javax.servlet.RequestDispatcher
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class RestErrorAttributes(
-    private val messagesOpt: ObjectProvider<Messages>
+    private val messagesOpt: ObjectProvider<Messages>,
+    private val restErrorProperties: RestErrorProperties
 ) : DefaultErrorAttributes() {
 
     private val log = KotlinLogging.logger {}
@@ -155,6 +156,9 @@ class RestErrorAttributes(
             else -> null
         }
         errorAttributes["message"] = message ?: "Unknown error"
+        if (restErrorProperties.includeStacktraceForErrors) {
+            errorAttributes["stacktrace"] = throwable?.stackTraceToString()
+        }
     }
 
     private fun addFieldErrors(attrs: MutableMap<String, Any?>, exc: Throwable?) {
