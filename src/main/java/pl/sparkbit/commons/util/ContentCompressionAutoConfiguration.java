@@ -2,6 +2,7 @@ package pl.sparkbit.commons.util;
 
 import com.github.ziplet.filter.compression.CompressingFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -16,6 +17,7 @@ import static pl.sparkbit.commons.CommonsProperties.CONTENT_COMPRESSION_ENABLED;
 @ConditionalOnProperty(value = CONTENT_COMPRESSION_ENABLED, havingValue = "true", matchIfMissing = true)
 @RequiredArgsConstructor
 @SuppressWarnings("SpringFacetCodeInspection")
+@ConditionalOnClass(CompressingFilter.class)
 public class ContentCompressionAutoConfiguration {
 
     private final ContentCompressionProperties configuration;
