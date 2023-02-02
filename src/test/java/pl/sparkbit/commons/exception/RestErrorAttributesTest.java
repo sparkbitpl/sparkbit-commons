@@ -1,5 +1,6 @@
 package pl.sparkbit.commons.exception;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
@@ -48,12 +50,14 @@ import static org.mockito.Mockito.verify;
 
 public class RestErrorAttributesTest {
 
-    private Messages messages = mock(Messages.class);
-    private ObjectProvider<Messages> messagesObjectProvider = mock(ObjectProvider.class);
-    private RestErrorAttributes errorAttributes =
-            new RestErrorAttributes(messagesObjectProvider, new RestErrorProperties());
+    private final Messages messages = mock(Messages.class);
+    @SuppressWarnings("unchecked")
+    private final ObjectProvider<Messages> messagesObjectProvider = mock(ObjectProvider.class);
+    private final RestErrorAttributes errorAttributes =
+        new RestErrorAttributes(messagesObjectProvider, new RestErrorProperties());
 
     private final MockHttpServletRequest request = new MockHttpServletRequest();
+    private final MockHttpServletResponse response = new MockHttpServletResponse();
     private final WebRequest webRequest = new ServletWebRequest(this.request);
 
     @Before
@@ -88,7 +92,7 @@ public class RestErrorAttributesTest {
     @Test
     public void genericMessage() {
         RuntimeException ex = new RuntimeException("Test exception");
-        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, null, null, ex);
+        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
         this.request.setAttribute("javax.servlet.error.exception", new RuntimeException("Ignored"));
 
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
@@ -103,7 +107,7 @@ public class RestErrorAttributesTest {
     @Test
     public void translatedMessageForBusinessException() {
         BusinessException ex = new NotFoundException("Default message");
-        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, null, null, ex);
+        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
         this.request.setAttribute("javax.servlet.error.exception", new RuntimeException("Ignored"));
         Mockito.when(messages.error("NOT_FOUND", new String[]{"Default message"}))
             .thenReturn("Translated message");
@@ -123,7 +127,7 @@ public class RestErrorAttributesTest {
     public void additionalDetailsForBusinessException() {
         Map<String, Object> details = ImmutableMap.of("f1", 1, "f2", "2");
         BusinessException ex = new CustomBusinessException("Custom exception message", details);
-        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, null, null, ex);
+        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
         this.request.setAttribute("javax.servlet.error.exception", new RuntimeException("Ignored"));
         Mockito.when(messages.error(
             "CUSTOM_BUSINESS_RULES_VIOLATED",
@@ -153,7 +157,7 @@ public class RestErrorAttributesTest {
             new MethodParameter(this.getClass().getDeclaredMethods()[0], -1),
             errors
         );
-        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, null, null, ex);
+        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
 
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
@@ -182,7 +186,7 @@ public class RestErrorAttributesTest {
             new MethodParameter(this.getClass().getDeclaredMethods()[0], -1),
             errors
         );
-        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, null, null, ex);
+        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
 
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
@@ -371,7 +375,8 @@ public class RestErrorAttributesTest {
     @Test
     public void clientErrorsAreNotLogged() {
         // given
-        val mockedAppender = mock(Appender.class);
+        @SuppressWarnings("unchecked")
+        Appender<ILoggingEvent> mockedAppender = mock(Appender.class);
         val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
         this.request.setAttribute("javax.servlet.error.status_code", 404);
@@ -387,23 +392,24 @@ public class RestErrorAttributesTest {
     @Test
     public void serverErrorsAreLogged() {
         // given
-        val mockedAppender = mock(Appender.class);
+        @SuppressWarnings("unchecked")
+        Appender<ILoggingEvent> mockedAppender = mock(Appender.class);
         val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
         this.request.setAttribute("javax.servlet.error.status_code", 500);
 
         // when
-        Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
-            ErrorAttributeOptions.defaults());
+        this.errorAttributes.getErrorAttributes(this.webRequest, ErrorAttributeOptions.defaults());
 
         // then
         verify(mockedAppender, times(1)).doAppend(any());
     }
 
     @Test
-    public void requestRejectedExceptionShoudntBeLogged() {
+    public void requestRejectedExceptionShouldNotBeLogged() {
         // given
-        val mockedAppender = mock(Appender.class);
+        @SuppressWarnings("unchecked")
+        Appender<ILoggingEvent> mockedAppender = mock(Appender.class);
         val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
         RequestRejectedException ex = new RequestRejectedException("Incorrect URL");
@@ -421,7 +427,7 @@ public class RestErrorAttributesTest {
         MissingServletRequestParameterException ex = new MissingServletRequestParameterException(
             "filename", "string"
         );
-        this.errorAttributes.resolveException(this.request, null, null, ex);
+        this.errorAttributes.resolveException(this.request, this.response, null, ex);
         this.request.setAttribute("javax.servlet.error.exception", ex);
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
@@ -435,7 +441,7 @@ public class RestErrorAttributesTest {
         MissingServletRequestPartException ex = new MissingServletRequestPartException(
             "file"
         );
-        this.errorAttributes.resolveException(this.request, null, null, ex);
+        this.errorAttributes.resolveException(this.request, this.response, null, ex);
         this.request.setAttribute("javax.servlet.error.exception", ex);
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
@@ -448,17 +454,17 @@ public class RestErrorAttributesTest {
     public void parseAcceptWithMultipleMineTypes() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, image/png, */*");
-        WebRequest webRequest = new ServletWebRequest(request);
         RestErrorAttributes errorAttributes =
-                new RestErrorAttributes(messagesObjectProvider, new RestErrorProperties());
-        Map<String, Object> attributes = errorAttributes.getErrorAttributes(this.webRequest, ErrorAttributeOptions.defaults());
+            new RestErrorAttributes(messagesObjectProvider, new RestErrorProperties());
+        Map<String, Object> attributes = errorAttributes.getErrorAttributes(this.webRequest,
+            ErrorAttributeOptions.defaults());
         assertThat(attributes).isNotNull();
     }
 
     private Map<String, Object> runMessageNotReadable(Exception cause) {
         HttpInputMessage body = new MockHttpInputMessage("{\"field1\": \"val1\"}".getBytes());
         HttpMessageNotReadableException ex = new HttpMessageNotReadableException("Invalid Json", cause, body);
-        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, null, null, ex);
+        ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
 
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
