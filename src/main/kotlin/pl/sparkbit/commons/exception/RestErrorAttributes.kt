@@ -18,6 +18,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.firewall.RequestRejectedException
+import org.springframework.validation.BindException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.context.request.RequestAttributes
@@ -95,7 +96,7 @@ class RestErrorAttributes(
                 }
                 throwable.message
             }
-            is MethodArgumentNotValidException -> {
+            is BindException -> {
                 throwable.bindingResult.allErrors.mapNotNull { it.defaultMessage }.let {
                     if (it.isNotEmpty()) {
                         it.joinToString(separator = "\n- ", prefix = "Validation errors:\n- ")
@@ -164,7 +165,7 @@ class RestErrorAttributes(
     private fun addFieldErrors(attrs: MutableMap<String, Any?>, exc: Throwable?) {
         if (exc == null) return
         when (exc) {
-            is MethodArgumentNotValidException -> {
+            is BindException -> {
                 attrs[FIELD_ERRORS] = exc.bindingResult.fieldErrors.map {
                     mapOf(FIELD_PATH to it.field, FIELD_ERROR_MSG to it.defaultMessage)
                 }
