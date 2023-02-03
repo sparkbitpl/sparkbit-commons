@@ -227,7 +227,7 @@ class RequiredFieldCustomizer : JavaBeansAwarePropertyCustomizer {
         // The same logic is used in default ModelConverter (io.swagger.v3.core.jackson.ModelResolver#applyBeanValidatorAnnotations)
         // We want it to be consistent so even if meaning of these annotations are different we will use as the same thing.
         val required = elementDescriptor.lookup<NotNull>() ?: elementDescriptor.lookup<NotEmpty>() ?: elementDescriptor.lookup<NotBlank>()
-        if (required != null && parent != null) {
+        if (required != null && parent != null && parent.required?.contains(property.name) == false) {
             parent.addRequiredItem(property.name)
         }
         return property
@@ -261,25 +261,24 @@ class BeansValidationModel(private val customizers: List<JavaBeansAwarePropertyC
     private var factory: ValidatorFactory = Validation.buildDefaultValidatorFactory()
     override fun resolve(type: AnnotatedType, context: ModelConverterContext, chain: MutableIterator<ModelConverter>): Schema<*>? {
         if (chain.hasNext()) {
-            val resolvedSchema = chain.next().resolve(type, context, chain)
-            if (type.parent == null) {
-                val constraints = when (type.type) {
-                    is SimpleType -> {
-                        factory.validator.getConstraintsForClass((type.type as SimpleType).rawClass)
-                    }
-
-                    is Class<*> -> {
-                        factory.validator.getConstraintsForClass(type.type as Class<*>)
-                    }
-
-                    else -> {
-                        log.warn { "Unsupported ${type.type}" }
-                        null
-                    }
+            val next = chain.next()
+            val resolvedSchema = next.resolve(type, context, chain)
+            val constraints = when (type.type) {
+                is SimpleType -> {
+                    factory.validator.getConstraintsForClass((type.type as SimpleType).rawClass)
                 }
-                if (constraints != null) {
-                    customize(resolvedSchema, null, constraints)
+
+                is Class<*> -> {
+                    factory.validator.getConstraintsForClass(type.type as Class<*>)
                 }
+
+                else -> {
+                    log.warn { "Unsupported ${type.type}" }
+                    null
+                }
+            }
+            if (constraints != null && resolvedSchema.properties != null) {
+                customize(resolvedSchema, null, constraints)
             }
             return resolvedSchema
         }
@@ -289,7 +288,7 @@ class BeansValidationModel(private val customizers: List<JavaBeansAwarePropertyC
     private fun customize(schema: Schema<*>, parent: Schema<*>?, descriptor: ElementDescriptor) {
         customizers.forEach { it.customize(schema, parent, descriptor) }
         if (descriptor is BeanDescriptor) {
-            schema.properties.forEach { (name, propSchema) ->
+            schema.properties?.forEach { (name, propSchema) ->
                 val propDescriptor = descriptor.getConstraintsForProperty(name)
                 if (propDescriptor != null) {
                     customize(propSchema, schema, propDescriptor)
