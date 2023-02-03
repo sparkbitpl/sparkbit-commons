@@ -20,6 +20,7 @@ import javax.validation.ValidatorFactory
 import javax.validation.constraints.DecimalMax
 import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.Digits
+import javax.validation.constraints.Email
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.Negative
@@ -198,6 +199,26 @@ class SizeCustomizer : JavaBeansAwarePropertyCustomizer {
                 log.warn { "Cannot apply size constraint $range to schema ${property.javaClass.name} - type is unsupported" }
             }
         }
+    }
+}
+
+class EmailCustomizer : JavaBeansAwarePropertyCustomizer {
+    private val log = KotlinLogging.logger {}
+    override fun customize(property: Schema<*>, parent: Schema<*>?, elementDescriptor: ElementDescriptor): Schema<*> {
+        val email = elementDescriptor.lookup<Email>()
+        if (email != null) {
+            if (!Objects.equals(property.format, FORMAT_EMAIL)) {
+                if (property.format != null) {
+                    log.warn { "Overwrite format ${property.format} with $FORMAT_EMAIL for ${property.name}" }
+                }
+                property.format = FORMAT_EMAIL
+            }
+        }
+        return property
+    }
+
+    companion object {
+        const val FORMAT_EMAIL = "email"
     }
 }
 
