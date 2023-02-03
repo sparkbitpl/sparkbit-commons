@@ -45,18 +45,8 @@ open class OpenApiAutoConfiguration {
     }
 
     @Bean
-    open fun notEmptyCustomizer(): NotEmptyCustomizer {
-        return NotEmptyCustomizer()
-    }
-
-    @Bean
-    open fun notNullCustomizer(): NotNullCustomizer {
-        return NotNullCustomizer()
-    }
-
-    @Bean
-    open fun notBlankCustomizer(): NotBlankCustomizer {
-        return NotBlankCustomizer()
+    open fun notNullCustomizer(): RequiredFieldCustomizer {
+        return RequiredFieldCustomizer()
     }
 
     @Bean

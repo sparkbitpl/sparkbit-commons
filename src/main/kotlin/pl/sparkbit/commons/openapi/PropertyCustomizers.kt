@@ -14,6 +14,7 @@ import pl.sparkbit.commons.validators.EnumValidatorImpl
 import pl.sparkbit.commons.validators.EnumValue
 import pl.sparkbit.commons.validators.InRange
 import java.math.BigDecimal
+import java.util.Objects
 import javax.validation.Validation
 import javax.validation.ValidatorFactory
 import javax.validation.constraints.DecimalMax
@@ -131,57 +132,13 @@ class PositiveOrZeroCustomizer : JavaBeansAwarePropertyCustomizer {
     }
 }
 
-class NotEmptyCustomizer : JavaBeansAwarePropertyCustomizer {
-    private val log = KotlinLogging.logger {}
-    override fun customize(property: Schema<*>, parent: Schema<*>?, elementDescriptor: ElementDescriptor): Schema<*> {
-        val notEmpty = elementDescriptor.lookup<NotEmpty>()
-        if (notEmpty != null) {
-            applyNotEmpty(property)
-        }
-        return property
-    }
-
-    private fun applyNotEmpty(property: Schema<*>) {
-        if (property.minLength == null) {
-            property.minLength = 1
-        } else {
-            log.warn { "Cannot set minLength for property ${property.name}: value already set to ${property.minLength} " }
-        }
-    }
-}
-
-class NotBlankCustomizer(private val notBlankPattern: String = "(.|\\s)*\\S(.|\\s)*") : JavaBeansAwarePropertyCustomizer {
-
-    private val log = KotlinLogging.logger {}
-    override fun customize(property: Schema<*>, parent: Schema<*>?, elementDescriptor: ElementDescriptor): Schema<*> {
-        val notEmpty = elementDescriptor.lookup<NotBlank>()
-        if (notEmpty != null) {
-            applyNotBlank(property)
-        }
-        return property
-    }
-
-    private fun applyNotBlank(property: Schema<*>) {
-        if (property.minLength == null) {
-            property.minLength = 1
-        } else if (property.minLength == 0) {
-            log.warn { "Cannot set minLength for property ${property.name}: value already set to ${property.minLength} " }
-        }
-        if (property.pattern == null) {
-            property.pattern = notBlankPattern
-        } else {
-            log.warn { "Cannot set pattern for property ${property.name}: value already set to ${property.pattern} " }
-        }
-    }
-}
-
 class PatternCustomizer : JavaBeansAwarePropertyCustomizer {
     private val log = KotlinLogging.logger {}
     override fun customize(property: Schema<*>, parent: Schema<*>?, elementDescriptor: ElementDescriptor): Schema<*> {
         val pattern = elementDescriptor.lookup<Pattern>()
         if (pattern != null) {
-            if (property.pattern != null) {
-                log.warn { "Override pattern ${property.pattern} with $pattern for ${property.name}" }
+            if (!Objects.equals(property.pattern, pattern.annotation.regexp)) {
+                log.warn { "Override pattern ${property.pattern} with ${pattern.annotation.regexp} for ${property.name}" }
             }
             property.pattern = pattern.annotation.regexp
         }
@@ -244,10 +201,12 @@ class SizeCustomizer : JavaBeansAwarePropertyCustomizer {
     }
 }
 
-class NotNullCustomizer : JavaBeansAwarePropertyCustomizer {
+class RequiredFieldCustomizer : JavaBeansAwarePropertyCustomizer {
     override fun customize(property: Schema<*>, parent: Schema<*>?, elementDescriptor: ElementDescriptor): Schema<*> {
-        val notNull = elementDescriptor.lookup<NotNull>()
-        if (notNull != null && parent != null) {
+        // The same logic is used in default ModelConverter (io.swagger.v3.core.jackson.ModelResolver#applyBeanValidatorAnnotations)
+        // We want it to be consistent so even if meaning of these annotations are different we will use as the same thing.
+        val required = elementDescriptor.lookup<NotNull>() ?: elementDescriptor.lookup<NotEmpty>() ?: elementDescriptor.lookup<NotBlank>()
+        if (required != null && parent != null) {
             parent.addRequiredItem(property.name)
         }
         return property
