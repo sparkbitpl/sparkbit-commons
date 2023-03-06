@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.util.stream.Collectors.toList;
@@ -136,7 +137,7 @@ public class RestLoggingFilter extends OncePerRequestFilter {
             logBuilder.append(prompt).append(headerName).append(" : ");
             if ("cookie".equalsIgnoreCase(headerName)) {
                 String headerValue = request.getHeader(headerName);
-                Cookie[] cookies = request.getCookies();
+                Cookie[] cookies = Optional.ofNullable(request.getCookies()).orElseGet(() -> new Cookie[0]);
                 List<String> valuesToMask = Arrays.stream(cookies)
                         .filter(cookie -> cookiesToMask.contains(cookie.getName()))
                         .map(Cookie::getValue)
