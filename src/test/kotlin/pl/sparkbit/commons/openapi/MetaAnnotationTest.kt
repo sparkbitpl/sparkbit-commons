@@ -2,28 +2,31 @@ package pl.sparkbit.commons.openapi
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.springdoc.core.SpringDocConfigProperties
-import org.springdoc.core.SpringDocConfiguration
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner
 import java.math.BigDecimal
-import javax.validation.Constraint
-import javax.validation.Payload
-import javax.validation.constraints.DecimalMax
-import javax.validation.constraints.Digits
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Pattern
-import javax.validation.constraints.PositiveOrZero
-import javax.validation.constraints.Size
+import jakarta.validation.Constraint
+import jakarta.validation.Payload
+import jakarta.validation.constraints.DecimalMax
+import jakarta.validation.constraints.Digits
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Pattern
+import jakarta.validation.constraints.PositiveOrZero
+import jakarta.validation.constraints.Size
+import org.springdoc.core.configuration.SpringDocConfiguration
+import org.springdoc.core.properties.SpringDocConfigProperties
+import org.springframework.format.support.FormattingConversionService
 import kotlin.reflect.KClass
 
 
 class MetaAnnotationTest : PropertyCustomizerTest() {
 
     private val contextRunner = WebApplicationContextRunner()
-        .withConfiguration(AutoConfigurations.of(SpringDocConfiguration::class.java, OpenApiAutoConfiguration::class.java, SpringDocConfigProperties::class.java))
+        .withConfiguration(AutoConfigurations.of(SpringDocConfiguration::class.java,
+                OpenApiAutoConfiguration::class.java, SpringDocConfigProperties::class.java))
+        .withBean("mvcConversionService", FormattingConversionService::class.java)
 
     @Test
     fun testMetaAnnotation() {

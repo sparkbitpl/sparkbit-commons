@@ -83,7 +83,7 @@ public class RestErrorAttributesTest {
 
     @Test
     public void specificStatusCode() {
-        this.request.setAttribute("javax.servlet.error.status_code", 404);
+        this.request.setAttribute("jakarta.servlet.error.status_code", 404);
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
         assertThat(attributes.get("status")).isEqualTo(404);
@@ -93,7 +93,7 @@ public class RestErrorAttributesTest {
     public void genericMessage() {
         RuntimeException ex = new RuntimeException("Test exception");
         ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
-        this.request.setAttribute("javax.servlet.error.exception", new RuntimeException("Ignored"));
+        this.request.setAttribute("jakarta.servlet.error.exception", new RuntimeException("Ignored"));
 
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
@@ -108,7 +108,7 @@ public class RestErrorAttributesTest {
     public void translatedMessageForBusinessException() {
         BusinessException ex = new NotFoundException("Default message");
         ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
-        this.request.setAttribute("javax.servlet.error.exception", new RuntimeException("Ignored"));
+        this.request.setAttribute("jakarta.servlet.error.exception", new RuntimeException("Ignored"));
         Mockito.when(messages.error("NOT_FOUND", new String[]{"Default message"}))
             .thenReturn("Translated message");
 
@@ -128,7 +128,7 @@ public class RestErrorAttributesTest {
         Map<String, Object> details = ImmutableMap.of("f1", 1, "f2", "2");
         BusinessException ex = new CustomBusinessException("Custom exception message", details);
         ModelAndView modelAndView = this.errorAttributes.resolveException(this.request, this.response, null, ex);
-        this.request.setAttribute("javax.servlet.error.exception", new RuntimeException("Ignored"));
+        this.request.setAttribute("jakarta.servlet.error.exception", new RuntimeException("Ignored"));
         Mockito.when(messages.error(
             "CUSTOM_BUSINESS_RULES_VIOLATED",
             new String[]{"i18nParam1"}
@@ -379,7 +379,7 @@ public class RestErrorAttributesTest {
         Appender<ILoggingEvent> mockedAppender = mock(Appender.class);
         val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
-        this.request.setAttribute("javax.servlet.error.status_code", 404);
+        this.request.setAttribute("jakarta.servlet.error.status_code", 404);
 
         // when
         this.errorAttributes.getErrorAttributes(this.webRequest,
@@ -396,7 +396,7 @@ public class RestErrorAttributesTest {
         Appender<ILoggingEvent> mockedAppender = mock(Appender.class);
         val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
-        this.request.setAttribute("javax.servlet.error.status_code", 500);
+        this.request.setAttribute("jakarta.servlet.error.status_code", 500);
 
         // when
         this.errorAttributes.getErrorAttributes(this.webRequest, ErrorAttributeOptions.defaults());
@@ -413,7 +413,7 @@ public class RestErrorAttributesTest {
         val logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(RestErrorAttributes.class);
         logger.addAppender(mockedAppender);
         RequestRejectedException ex = new RequestRejectedException("Incorrect URL");
-        this.request.setAttribute("javax.servlet.error.exception", ex);
+        this.request.setAttribute("jakarta.servlet.error.exception", ex);
 
         // when
         this.errorAttributes.getErrorAttributes(this.webRequest, ErrorAttributeOptions.defaults());
@@ -428,7 +428,7 @@ public class RestErrorAttributesTest {
             "filename", "string"
         );
         this.errorAttributes.resolveException(this.request, this.response, null, ex);
-        this.request.setAttribute("javax.servlet.error.exception", ex);
+        this.request.setAttribute("jakarta.servlet.error.exception", ex);
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
 
@@ -442,7 +442,7 @@ public class RestErrorAttributesTest {
             "file"
         );
         this.errorAttributes.resolveException(this.request, this.response, null, ex);
-        this.request.setAttribute("javax.servlet.error.exception", ex);
+        this.request.setAttribute("jakarta.servlet.error.exception", ex);
         Map<String, Object> attributes = this.errorAttributes.getErrorAttributes(this.webRequest,
             ErrorAttributeOptions.defaults());
 

@@ -2,22 +2,27 @@ package pl.sparkbit.commons.openapi
 
 import org.assertj.core.api.Assertions
 import org.junit.Test
-import org.springdoc.core.SpringDocConfigProperties
-import org.springdoc.core.SpringDocConfiguration
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner
 import java.math.BigDecimal
-import javax.validation.constraints.PositiveOrZero
+import jakarta.validation.constraints.PositiveOrZero
+import org.springdoc.core.configuration.SpringDocConfiguration
+import org.springdoc.core.properties.SpringDocConfigProperties
+import org.springframework.format.support.FormattingConversionService
 
 class PositiveOrZeroCustomizerTest : PropertyCustomizerTest() {
     private val contextRunner = WebApplicationContextRunner()
-        .withConfiguration(AutoConfigurations.of(SpringDocConfiguration::class.java, SpringDocConfigProperties::class.java))
+        .withConfiguration(AutoConfigurations.of(
+                SpringDocConfiguration::class.java,
+                SpringDocConfigProperties::class.java
+        ))
         .withBean(PositiveOrZeroCustomizer::class.java)
+        .withBean("mvcConversionService", FormattingConversionService::class.java)
         .withBean(BeansValidationModel::class.java)
 
     @Test
-    fun testNoNegativeOrZeroValue() {
+    fun testNoPositiveOrZeroValue() {
         contextRunner.run { _: AssertableWebApplicationContext? ->
             val schema = getSchema(WithPositiveOrZero::class.java, "value")
 
@@ -29,7 +34,7 @@ class PositiveOrZeroCustomizerTest : PropertyCustomizerTest() {
     }
 
     @Test
-    fun testNegativeOrZeroValue() {
+    fun testPositiveOrZeroValue() {
         contextRunner.run { _: AssertableWebApplicationContext? ->
             listOf("valueList", "valuePositiveOrZero").forEach { fieldName ->
                 val schema = getSchema(WithPositiveOrZero::class.java, fieldName)

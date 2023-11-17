@@ -1,10 +1,9 @@
 package pl.sparkbit.commons.mail;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.NotBlank;
 
 import static pl.sparkbit.commons.CommonsProperties.MAIL;
 

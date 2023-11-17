@@ -1,8 +1,8 @@
 package pl.sparkbit.commons.json;
 
 
-import javax.validation.valueextraction.ExtractedValue;
-import javax.validation.valueextraction.ValueExtractor;
+import jakarta.validation.valueextraction.ExtractedValue;
+import jakarta.validation.valueextraction.ValueExtractor;
 
 /**
  * This class cannot be written in Kotlin (cannot annotate wildcard type:

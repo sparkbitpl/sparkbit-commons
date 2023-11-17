@@ -1,10 +1,10 @@
 package pl.sparkbit.commons.json
 
+import jakarta.validation.ClockProvider
+import jakarta.validation.Configuration
+import jakarta.validation.valueextraction.ValueExtractor
 import org.hibernate.validator.internal.engine.ValidatorFactoryImpl
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
-import javax.validation.ClockProvider
-import javax.validation.Configuration
-import javax.validation.valueextraction.ValueExtractor
 
 open class CustomLocalValidatorFactoryBean(private val valueExtractors: List<ValueExtractor<*>>) : LocalValidatorFactoryBean() {
 
