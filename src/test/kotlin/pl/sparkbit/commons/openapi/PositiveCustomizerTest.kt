@@ -2,19 +2,21 @@ package pl.sparkbit.commons.openapi
 
 import org.assertj.core.api.Assertions
 import org.junit.Test
-import org.springdoc.core.SpringDocConfigProperties
-import org.springdoc.core.SpringDocConfiguration
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner
 import java.math.BigDecimal
-import javax.validation.constraints.Positive
+import jakarta.validation.constraints.Positive
+import org.springdoc.core.configuration.SpringDocConfiguration
+import org.springdoc.core.properties.SpringDocConfigProperties
+import org.springframework.format.support.FormattingConversionService
 
 class PositiveCustomizerTest : PropertyCustomizerTest() {
     private val contextRunner = WebApplicationContextRunner()
         .withConfiguration(AutoConfigurations.of(SpringDocConfiguration::class.java, SpringDocConfigProperties::class.java))
         .withBean(PositiveCustomizer::class.java)
         .withBean(BeansValidationModel::class.java)
+            .withBean("mvcConversionService", FormattingConversionService::class.java)
 
     @Test
     fun testNoPositiveValue() {

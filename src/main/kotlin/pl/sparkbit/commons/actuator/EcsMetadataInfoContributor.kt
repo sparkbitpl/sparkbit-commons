@@ -1,5 +1,6 @@
 package pl.sparkbit.commons.actuator
 
+import jakarta.annotation.PostConstruct
 import mu.KotlinLogging
 import org.springframework.boot.actuate.info.Info
 import org.springframework.boot.actuate.info.InfoContributor
@@ -7,7 +8,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.getForEntity
-import javax.annotation.PostConstruct
 
 class EcsMetadataInfoContributor(
     private val metadataUri: String

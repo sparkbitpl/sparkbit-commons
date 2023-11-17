@@ -1,11 +1,11 @@
 package pl.sparkbit.commons.actuator
 
+import jakarta.annotation.PostConstruct
 import org.springframework.boot.SpringBootVersion
 import org.springframework.boot.actuate.info.Info
 import org.springframework.boot.actuate.info.InfoContributor
 import org.springframework.core.SpringVersion
 import org.springframework.core.env.Environment
-import javax.annotation.PostConstruct
 
 class RuntimeInfoContributor(
     private val environment: Environment

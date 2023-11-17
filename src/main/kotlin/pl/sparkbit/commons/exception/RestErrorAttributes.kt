@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.databind.exc.InvalidTypeIdException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
+import jakarta.servlet.RequestDispatcher
 import mu.KotlinLogging
 import org.springframework.beans.TypeMismatchException
 import org.springframework.beans.factory.ObjectProvider
@@ -28,7 +29,6 @@ import org.springframework.web.multipart.MultipartException
 import org.springframework.web.multipart.support.MissingServletRequestPartException
 import pl.sparkbit.commons.i18n.Messages
 import java.time.Instant
-import javax.servlet.RequestDispatcher
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 class RestErrorAttributes(

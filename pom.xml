@@ -5,7 +5,7 @@
 
     <groupId>pl.sparkbit</groupId>
     <artifactId>sparkbit-commons</artifactId>
-    <version>2.0.49-SNAPSHOT</version>
+    <version>2.0.51-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A library that provides various common functionalities for typical REST API applications created using Spring Boot</description>
@@ -14,19 +14,27 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.12</version>
+        <version>3.1.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>11</java.version>
-        <kotlin.version>1.6.21</kotlin.version>
-        <springdoc.version>1.6.8</springdoc.version>
-        <guava.version>31.0.1-jre</guava.version>
-        <snakeyaml.version>1.31</snakeyaml.version>
-        <spring.boot.version>2.6.12</spring.boot.version>
+        <spring.boot.version>3.1.5</spring.boot.version>
+        <springdoc.openapi.starter.common.version>2.2.0</springdoc.openapi.starter.common.version>
+        <mybatis.spring.boot.starter.version>3.0.2</mybatis.spring.boot.starter.version>
+        <guava.version>32.1.3-jre</guava.version>
+        <kotlin.version>1.9.20</kotlin.version>
+        <kotlin.logging.jvm.version>3.0.5</kotlin.logging.jvm.version>
+        <mockito.kotlin.version>2.2.0</mockito.kotlin.version>
+        <java.uuid.generator.version>4.3.0</java.uuid.generator.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
+        <commons.io.version>2.15.0</commons.io.version>
+        <sendgrid.java.version>4.10.0</sendgrid.java.version>
+        <wiremock.version>3.3.1</wiremock.version>
+        <org.osgi.core.version>8.0.0</org.osgi.core.version>
+        <asm.version>9.6</asm.version>
     </properties>
 
     <profiles>
@@ -266,7 +274,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>11</jvmTarget>
+                    <jvmTarget>17</jvmTarget>
                 </configuration>
             </plugin>
             <plugin>
@@ -327,8 +335,8 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -351,17 +359,12 @@
         <dependency>
             <groupId>com.fasterxml.uuid</groupId>
             <artifactId>java-uuid-generator</artifactId>
-            <version>4.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>31.1-jre</version>
+            <version>${java.uuid.generator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.2.2</version>
+            <version>${mybatis.spring.boot.starter.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -378,19 +381,13 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.11.0</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.github.ziplet</groupId>
-            <artifactId>ziplet</artifactId>
-            <version>2.4.1</version>
+            <version>${commons.io.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.sendgrid</groupId>
             <artifactId>sendgrid-java</artifactId>
-            <version>4.9.1</version>
+            <version>${sendgrid.java.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -406,9 +403,14 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-common</artifactId>
-            <version>${springdoc.version}</version>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>${springdoc.openapi.starter.common.version}</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -422,7 +424,7 @@
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
@@ -433,7 +435,7 @@
         <dependency>
             <groupId>io.github.microutils</groupId>
             <artifactId>kotlin-logging-jvm</artifactId>
-            <version>2.1.21</version>
+            <version>${kotlin.logging.jvm.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
@@ -443,7 +445,7 @@
         <dependency>
             <groupId>com.nhaarman.mockitokotlin2</groupId>
             <artifactId>mockito-kotlin</artifactId>
-            <version>2.2.0</version>
+            <version>${mockito.kotlin.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -453,28 +455,28 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
+            <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.27.2</version>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- Dependencies to satisfy Maven enforcer's upper bound rule -->
         <dependency>
             <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>6.0.0</version>
+            <artifactId>osgi.core</artifactId>
+            <version>${org.osgi.core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>9.3</version>
+            <version>${asm.version}</version>
         </dependency>
 
     </dependencies>
 
+    <!-- Enforce newer version than the one specified by MyBatis -->
     <dependencyManagement>
         <dependencies>
-            <!-- Enforce newer version than the one specified by MyBatis -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-autoconfigure</artifactId>

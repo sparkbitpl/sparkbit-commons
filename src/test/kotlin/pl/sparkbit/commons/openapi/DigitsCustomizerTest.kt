@@ -2,19 +2,21 @@ package pl.sparkbit.commons.openapi
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.springdoc.core.SpringDocConfigProperties
-import org.springdoc.core.SpringDocConfiguration
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner
 import java.math.BigDecimal
-import javax.validation.constraints.Digits
+import jakarta.validation.constraints.Digits
+import org.springdoc.core.configuration.SpringDocConfiguration
+import org.springdoc.core.properties.SpringDocConfigProperties
+import org.springframework.format.support.FormattingConversionService
 
 class DigitsCustomizerTest : PropertyCustomizerTest() {
     private val contextRunner = WebApplicationContextRunner()
         .withConfiguration(AutoConfigurations.of(SpringDocConfiguration::class.java, SpringDocConfigProperties::class.java))
         .withBean(DigitsCustomizer::class.java)
         .withBean(BeansValidationModel::class.java)
+        .withBean("mvcConversionService", FormattingConversionService::class.java)
 
     @Test
     fun testNoDigits() {
@@ -46,6 +48,7 @@ class DigitsCustomizerTest : PropertyCustomizerTest() {
     fun testDigitsWithNoFraction() {
         contextRunner.run { _: AssertableWebApplicationContext? ->
             val schema = getSchema(WithDigits::class.java, "valueNoFraction")
+            // println(schema)
             assertThat(schema.maximum).isEqualTo("10000")
             assertThat(schema.exclusiveMaximum).isTrue()
             assertThat(schema.multipleOf).isEqualTo("1")

@@ -2,11 +2,12 @@ package pl.sparkbit.commons.openapi
 
 import org.assertj.core.api.Assertions
 import org.junit.Test
-import org.springdoc.core.SpringDocConfigProperties
-import org.springdoc.core.SpringDocConfiguration
+import org.springdoc.core.configuration.SpringDocConfiguration
+import org.springdoc.core.properties.SpringDocConfigProperties
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner
+import org.springframework.format.support.FormattingConversionService
 import pl.sparkbit.commons.validators.InRange
 import java.math.BigDecimal
 
@@ -15,9 +16,10 @@ class InRangeCustomizerTest : PropertyCustomizerTest() {
         .withConfiguration(AutoConfigurations.of(SpringDocConfiguration::class.java, SpringDocConfigProperties::class.java))
         .withBean(InRangeCustomizer::class.java)
         .withBean(BeansValidationModel::class.java)
+        .withBean("mvcConversionService", FormattingConversionService::class.java)
 
     @Test
-    fun testNoNegativeOrZeroValue() {
+    fun testNoInRangeValue() {
         contextRunner.run { _: AssertableWebApplicationContext? ->
             val schema = getSchema(WithInRange::class.java, "value")
 
@@ -29,7 +31,7 @@ class InRangeCustomizerTest : PropertyCustomizerTest() {
     }
 
     @Test
-    fun testNegativeOrZeroValue() {
+    fun testInRangeValue() {
         contextRunner.run { _: AssertableWebApplicationContext? ->
             val schema = getSchema(WithInRange::class.java, "valueInRage")
 

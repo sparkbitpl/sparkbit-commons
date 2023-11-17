@@ -1,11 +1,11 @@
 package pl.sparkbit.commons.i18n;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import javax.annotation.Nullable;
 import java.util.Locale;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
